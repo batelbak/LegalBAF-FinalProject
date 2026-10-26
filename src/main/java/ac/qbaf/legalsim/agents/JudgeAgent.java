@@ -17,13 +17,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * סוכן השופט: לא מגיב במהלך הדיון. בסוף הוא מסווג כל טיעון לקטגוריה, נותן לו ציון,
- * ממפה את הטיעונים לגרף QBAF ומכריע מי מוביל.
+ * סוכן השופט: לא מגיב במהלך הדיון ולא מכניס טיעונים לגרף. את זה עושים סוכני התביעה וההגנה.
+ * השופט קורא את הטיעונים שבגרף, מסווג כל טיעון לקטגוריה, קובע את משקל הקשת שלו ומכריע מי מוביל.
  */
 public class JudgeAgent extends Agent {
-    public static final String SIDE_APPLICANT = "applicant";
-    public static final String SIDE_GOVERNMENT = "government";
-
     /** טיעון של צד, כפי שהוא מוצג לשופט. */
     public record PartyArgument(String id, String side, String text) {
     }
@@ -91,14 +88,12 @@ public class JudgeAgent extends Agent {
         throw new UnsupportedOperationException("The judge does not respond during the hearing");
     }
 
-    /** הטענות האמיתיות מפסק הדין: A1, A2... של המבקש ו-G1, G2... של הממשלה. */
-    public static List<PartyArgument> submissionsOf(LegalCase legalCase) {
+    /** הטיעונים שהסוכנים הכניסו לגרף. הצד נקבע לפי ההחלטה שהטיעון תומך בה. */
+    public static List<PartyArgument> argumentsIn(QbafGraph graph) {
         List<PartyArgument> arguments = new ArrayList<>();
-        for (int i = 0; i < legalCase.applicantSubmissions().size(); i++) {
-            arguments.add(new PartyArgument("A" + (i + 1), SIDE_APPLICANT, legalCase.applicantSubmissions().get(i)));
-        }
-        for (int i = 0; i < legalCase.governmentSubmissions().size(); i++) {
-            arguments.add(new PartyArgument("G" + (i + 1), SIDE_GOVERNMENT, legalCase.governmentSubmissions().get(i)));
+        for (QbafGraph.Support support : graph.supports()) {
+            String side = LegalCase.VIOLATION.equals(support.decision()) ? ProsecutorAgent.SIDE : DefenseAgent.SIDE;
+            arguments.add(new PartyArgument(support.argument(), side, graph.argument(support.argument()).text()));
         }
         return arguments;
     }
@@ -131,21 +126,22 @@ public class JudgeAgent extends Agent {
         return scored;
     }
 
-    /** משקל קשת = ציון השופט × θ של הקטגוריה. קטגוריה בלי θ מקבלת 1. */
-    public QbafGraph buildGraph(List<ScoredArgument> scored, Map<ArgumentCategory, Double> theta) {
-        QbafGraph graph = new QbafGraph();
-        graph.addDecision(LegalCase.VIOLATION, "Violation of Article 10");
-        graph.addDecision(LegalCase.NO_VIOLATION, "No violation of Article 10");
+    /**
+     * שוקל את הקשתות שהסוכנים הכניסו לגרף: משקל קשת = ציון השופט × θ של הקטגוריה.
+     * קטגוריה בלי θ מקבלת 1. לכל טיעון בגרף חייבת להיות הערכה.
+     */
+    public void weigh(QbafGraph graph, List<ScoredArgument> scored, Map<ArgumentCategory, Double> theta) {
+        Map<String, ScoredArgument> byId = new HashMap<>();
         for (ScoredArgument s : scored) {
-            String decision = SIDE_APPLICANT.equals(s.argument().side()) ? LegalCase.VIOLATION : LegalCase.NO_VIOLATION;
-            graph.addArgument(s.argument().id(), s.argument().text(), s.category());
-            graph.addSupport(s.argument().id(), decision, s.strength() * theta.getOrDefault(s.category(), 1.0));
+            byId.put(s.argument().id(), s);
         }
-        return graph;
-    }
-
-    public QbafGraph mapToGraph(List<Map<String, Object>> history) {
-        throw new UnsupportedOperationException("skeleton");
+        for (QbafGraph.Support support : graph.supports()) {
+            ScoredArgument s = byId.get(support.argument());
+            if (s == null) {
+                throw new IllegalStateException("No assessment for " + support.argument());
+            }
+            graph.weigh(support.argument(), s.category(), s.strength() * theta.getOrDefault(s.category(), 1.0));
+        }
     }
 
     public Map<String, Object> decide(QbafGraph graph) {

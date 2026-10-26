@@ -11,6 +11,9 @@ import java.util.Map;
  * קודקודי החלטה = צמתי הכרעה מוגדרים מראש (למשל הרשעה / זיכוי).
  * קודקודי טיעון = טענות שעלו מהסוכנים בדיון.
  * קשתות תמיכה בלבד: מטיעון אל קודקוד ההחלטה שהוא מחזק, עם משקל = עוצמת הטיעון.
+ * <p>
+ * חלוקת התפקידים: סוכני התביעה וההגנה מוסיפים טיעונים וקשתות בלי משקל (addArgument, addSupport).
+ * רק השופט מסווג את הטיעון וקובע את משקל הקשת (weigh).
  */
 public class QbafGraph {
 
@@ -18,12 +21,12 @@ public class QbafGraph {
     public record Decision(String id, String label) {
     }
 
-    /** קודקוד טיעון, למשל "אנשי ציבור חייבים לסבול ביקורת חריפה", עם הקטגוריה שלו. */
+    /** קודקוד טיעון, למשל "אנשי ציבור חייבים לסבול ביקורת חריפה". category == null עד שהשופט מסווג. */
     public record Argument(String id, String text, ArgumentCategory category) {
     }
 
-    /** קשת תמיכה מכוונת: argument → decision, במשקל בטווח [0, 1]. */
-    public record Support(String argument, String decision, double weight) {
+    /** קשת תמיכה מכוונת: argument → decision. weight בטווח [0, 1], או null עד שהשופט שוקל אותה. */
+    public record Support(String argument, String decision, Double weight) {
     }
 
     private final Map<String, Decision> decisions = new LinkedHashMap<>();
@@ -36,12 +39,8 @@ public class QbafGraph {
     }
 
     public void addArgument(String argumentId, String text) {
-        addArgument(argumentId, text, ArgumentCategory.OTHER);
-    }
-
-    public void addArgument(String argumentId, String text, ArgumentCategory category) {
         requireNewId(argumentId);
-        arguments.put(argumentId, new Argument(argumentId, text, category));
+        arguments.put(argumentId, new Argument(argumentId, text, null));
     }
 
     public Argument argument(String argumentId) {
@@ -52,21 +51,33 @@ public class QbafGraph {
         return argument;
     }
 
-    /** כל טיעון תומך בקודקוד החלטה אחד בלבד. */
-    public void addSupport(String argumentId, String decisionId, double weight) {
-        if (!arguments.containsKey(argumentId)) {
-            throw new IllegalArgumentException("Unknown argument: " + argumentId);
-        }
+    /** קשת בלי משקל. כל טיעון תומך בקודקוד החלטה אחד בלבד. */
+    public void addSupport(String argumentId, String decisionId) {
+        argument(argumentId);
         if (!decisions.containsKey(decisionId)) {
             throw new IllegalArgumentException("Unknown decision: " + decisionId);
-        }
-        if (!(weight >= 0.0 && weight <= 1.0)) {
-            throw new IllegalArgumentException("weight must be in [0, 1], got " + weight);
         }
         if (supports.containsKey(argumentId)) {
             throw new IllegalArgumentException("Argument already supports a decision: " + argumentId);
         }
-        supports.put(argumentId, new Support(argumentId, decisionId, weight));
+        supports.put(argumentId, new Support(argumentId, decisionId, null));
+    }
+
+    /** הכרעת השופט על טיעון: הקטגוריה שלו והמשקל של קשת התמיכה שלו. */
+    public void weigh(String argumentId, ArgumentCategory category, double weight) {
+        Argument argument = argument(argumentId);
+        Support support = supports.get(argumentId);
+        if (support == null) {
+            throw new IllegalArgumentException("Argument supports no decision: " + argumentId);
+        }
+        if (category == null) {
+            throw new IllegalArgumentException("category must not be null");
+        }
+        if (!(weight >= 0.0 && weight <= 1.0)) {
+            throw new IllegalArgumentException("weight must be in [0, 1], got " + weight);
+        }
+        arguments.put(argumentId, new Argument(argumentId, argument.text(), category));
+        supports.put(argumentId, new Support(argumentId, support.decision(), weight));
     }
 
     public Collection<Decision> decisions() {

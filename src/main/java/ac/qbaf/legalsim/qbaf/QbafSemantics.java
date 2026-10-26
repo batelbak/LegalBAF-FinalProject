@@ -23,6 +23,9 @@ public class QbafSemantics {
         for (Decision decision : graph.decisions()) {
             double total = 0.0;
             for (Support support : graph.supportersOf(decision.id())) {
+                if (support.weight() == null) {
+                    throw new IllegalStateException("The judge has not weighed the edge of " + support.argument());
+                }
                 total += support.weight();
             }
             scores.put(decision.id(), total);
