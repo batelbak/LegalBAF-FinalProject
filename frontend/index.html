@@ -1,0 +1,139 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>LegalBAF Courtroom</title>
+  <link rel="icon" href="assets/scales.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+  <link rel="stylesheet" href="css/theme.css">
+  <link rel="stylesheet" href="css/layout.css">
+  <link rel="stylesheet" href="css/components.css">
+  <script type="module" src="js/app.js"></script>
+</head>
+<body>
+<div class="app">
+  <header class="masthead">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M16 4v23M9 27h14M6 9h20"/>
+        <path d="M6 9l-4 9h8l-4-9zM26 9l-4 9h8l-4-9z"/>
+        <path d="M2 18a4 2.4 0 0 0 8 0M22 18a4 2.4 0 0 0 8 0"/>
+      </svg>
+      <div>
+        <div class="brand-name">LegalBAF</div>
+        <div class="brand-sub">Quantitative argumentation for adversarial hearings</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <span class="proto"><span class="dot" id="server-dot"></span><span id="server-text">Connecting to the server…</span></span>
+  </header>
+
+  <section class="caption" aria-label="Case">
+    <div class="caption-main">
+      <div class="eyebrow" id="case-eyebrow">Article 10 · Freedom of expression</div>
+      <h1 class="case-title" id="case-title">Loading cases…</h1>
+      <p class="case-summary"><span id="case-summary"></span> <button class="link" id="btn-facts" type="button" hidden>Facts of the case</button></p>
+    </div>
+    <div class="controls">
+      <label class="hint" for="case-select">Case</label>
+      <select id="case-select" class="select" disabled></select>
+      <select id="mode" class="select" aria-label="Hearing mode">
+        <option value="record">Judgment record</option>
+        <option value="simulation">Agent simulation</option>
+      </select>
+      <button class="btn primary" id="btn-play" disabled>Begin hearing</button>
+      <button class="btn" id="btn-step" disabled>Next step</button>
+      <button class="btn" id="btn-reset" disabled>Reset</button>
+      <select id="speed" class="select" aria-label="Speed">
+        <option value="1">1×</option>
+        <option value="2">2×</option>
+        <option value="4">4×</option>
+      </select>
+      <span class="status"><span class="dot" id="status-dot"></span><span id="status-text">Ready</span></span>
+    </div>
+  </section>
+
+  <main class="panes">
+    <section class="pane" aria-label="Hearing record">
+      <div class="pane-head">
+        <h2 class="pane-title">Hearing record</h2>
+        <span class="pane-note" id="round-note">Round 0</span>
+      </div>
+      <div class="record" id="record" aria-live="polite"></div>
+      <form class="composer" id="composer">
+        <div class="composer-row">
+          <span class="composer-label">Test your own argument</span>
+          <div class="seg" role="group" aria-label="Argue for">
+            <button type="button" class="pros" id="side-app" aria-pressed="true">Applicant</button>
+            <button type="button" class="def" id="side-gov" aria-pressed="false">Government</button>
+          </div>
+        </div>
+        <textarea id="user-arg" placeholder="Type an argument. The opposing agent will draft a counter-argument and the bench will weigh both."></textarea>
+        <div class="composer-row">
+          <span class="hint">Litigation strategy · see the reply before the hearing</span>
+          <button class="btn primary" id="btn-submit" type="submit">Submit to the court</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="pane graph-pane" aria-label="Argument graph">
+      <div class="pane-head">
+        <h2 class="pane-title">Argument graph</h2>
+        <span class="pane-note">Support edges only · edge weight = strength set by the bench</span>
+      </div>
+      <div class="graph-wrap" id="graph-wrap">
+        <svg id="graph" viewBox="0 0 900 540" role="img" aria-label="Quantitative bipolar argumentation graph"></svg>
+      </div>
+      <div class="legend">
+        <span><i class="sw sw-pros"></i>Prosecution agent · Applicant → Violation</span>
+        <span><i class="sw sw-def"></i>Defence agent · Government → No violation</span>
+        <span><i class="sw sw-unweighed"></i>Entered, awaiting the bench</span>
+      </div>
+    </section>
+
+    <aside class="pane" aria-label="The bench">
+      <div class="pane-head">
+        <h2 class="pane-title">The bench</h2>
+        <span class="pane-note">Judge agent weighs and decides</span>
+      </div>
+      <div class="bench" id="bench">
+        <div>
+          <h3 class="block-title">Balance of the case</h3>
+          <div class="balance">
+            <div class="balance-bar"><span class="p" id="bar-p"></span><span class="d" id="bar-d"></span></div>
+            <div class="balance-nums">
+              <div><span class="muted">Violation</span><b id="score-p">0.00</b></div>
+              <div class="r"><span class="muted">No violation</span><b id="score-d">0.00</b></div>
+            </div>
+            <div class="lead" id="lead">No arguments weighed yet.</div>
+          </div>
+        </div>
+        <div>
+          <h3 class="block-title">Latest assessment</h3>
+          <div class="assess" id="assess"></div>
+        </div>
+        <div>
+          <h3 class="block-title">Margin over the hearing</h3>
+          <svg id="timeline" viewBox="0 0 300 130" role="img" aria-label="Margin between the two decisions after each assessment"></svg>
+        </div>
+        <div>
+          <h3 class="block-title">Tipping points</h3>
+          <div class="tips" id="tips"></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<dialog class="facts" id="facts-dialog" aria-labelledby="facts-title">
+  <div class="facts-head">
+    <h2 class="pane-title" id="facts-title">Facts of the case</h2>
+    <button class="btn" id="btn-facts-close" type="button">Close</button>
+  </div>
+  <div class="facts-body" id="facts-body"></div>
+</dialog>
+</body>
+</html>

@@ -1,0 +1,370 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QBAF Graph</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1f; --muted: #6b6b70; --line: #e2e2e0;
+    --violation: #b03a2e; --no-violation: #1f6f8b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161618; --panel: #1f1f22; --text: #ececee; --muted: #9a9aa0; --line: #333338;
+            --violation: #e06c5f; --no-violation: #5fb3d1; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Arial, sans-serif; }
+  main { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .verdict { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+  .verdict .item b { display: block; font-size: 13px; color: var(--muted); font-weight: 500; }
+  .verdict .item span { font-size: 18px; font-weight: 600; }
+  .ok { color: #2e8b57; } .bad { color: #c0392b; }
+  .bars { flex: 1 1 320px; }
+  .bar { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .bar .label { width: 90px; font-size: 13px; }
+  .bar .track { flex: 1; height: 14px; background: var(--line); border-radius: 7px; overflow: hidden; }
+  .bar .fill { height: 100%; border-radius: 7px; }
+  .bar .num { width: 52px; font-variant-numeric: tabular-nums; font-size: 13px; text-align: left; }
+  svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; margin-top: 8px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-left: 6px; vertical-align: -1px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 13px; }
+  td.en { direction: ltr; text-align: left; }
+  tr.selected { background: color-mix(in srgb, var(--no-violation) 14%, transparent); }
+  .chip { display: inline-block; padding: 1px 8px; border-radius: 10px; color: #fff; font-size: 12px; white-space: nowrap; }
+  .table-wrap { overflow-x: auto; }
+  .node { cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title"></h1>
+  <p class="sub">גרף QBAF מהטענות האמיתיות בפסק הדין. משקל קשת = ציון השופט × θ של הקטגוריה (כרגע θ = 1).</p>
+
+  <section class="panel verdict">
+    <div class="item"><b>הכרעת המערכת</b><span id="predicted"></span></div>
+    <div class="item"><b>הכרעת בית הדין</b><span id="actual"></span></div>
+    <div class="item"><b>התאמה</b><span id="match"></span></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section class="panel">
+    <svg id="graph" role="img" aria-label="QBAF graph"></svg>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>צד</th><th>קטגוריה</th><th>ציון</th><th>טיעון</th><th>נימוק השופט</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+</main>
+<script>
+const DATA = {
+  "caseId" : "001-127395",
+  "title" : "Ristamäki and Korvola v. Finland",
+  "actualOutcome" : "violation",
+  "predictedOutcome" : "violation",
+  "scores" : {
+    "violation" : 5.949999999999999,
+    "no_violation" : 4.549999999999999
+  },
+  "arguments" : [ {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "The conviction interfered with their freedom of expression and, although the interference had a basis in domestic law, it was not necessary in a democratic society.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.5,
+    "weight" : 0.5,
+    "supports" : "violation",
+    "rationale" : "Framing argument conceding lawfulness and contesting necessity; relevant but general."
+  }, {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "It was not only the right but also the duty of the media towards citizens to disclose a problem of public interest such as the lack of cooperation between the police and the tax authorities.",
+    "category" : "public_interest",
+    "strength" : 0.8,
+    "weight" : 0.8,
+    "supports" : "violation",
+    "rationale" : "Press watchdog role on inter-authority cooperation in a major economic crime investigation is a matter of clear public interest, strongly protected by the Court."
+  }, {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "The programme discussed two separate cases which had both attracted considerable publicity, and it was unusual that the tax authorities had declined the police's request to conduct a tax inspection in those cases; the programme revealed this issue.",
+    "category" : "public_interest",
+    "strength" : 0.7,
+    "weight" : 0.7,
+    "supports" : "violation",
+    "rationale" : "The programme revealed an unusual refusal of cooperation in highly publicised cases, strengthening its contribution to public debate."
+  }, {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "It was undisputed that the information in the programme was true and correct.",
+    "category" : "truth_and_verification",
+    "strength" : 0.8,
+    "weight" : 0.8,
+    "supports" : "violation",
+    "rationale" : "The District Court itself found nothing false in the information as such, which weighs heavily against a conviction for false insinuation."
+  }, {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "The applicants had learned of the issue from the police themselves, a source they considered reliable; they acted in good faith and had no intention to defame.",
+    "category" : "truth_and_verification",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "violation",
+    "rationale" : "Reliance on police sources and good faith is relevant to responsible journalism, though asserted without detail."
+  }, {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "The national courts accepted that the programme contained no allegation that K.U. was guilty of a crime, yet reached the erroneous conclusion that it contained a deliberate insinuation that he had invested funds to the detriment of his creditors.",
+    "category" : "truth_and_verification",
+    "strength" : 0.65,
+    "weight" : 0.65,
+    "supports" : "violation",
+    "rationale" : "Points out tension between no direct allegation and a finding of insinuation; the programme accurately said the police wanted to know, making the conviction contestable."
+  }, {
+    "id" : "A7",
+    "side" : "applicant",
+    "text" : "It would not have been possible to criticise the tax authorities' conduct without introducing the two separate but linked cases, since it was precisely in those cases that cooperation between the authorities had failed.",
+    "category" : "content_and_form",
+    "strength" : 0.75,
+    "weight" : 0.75,
+    "supports" : "violation",
+    "rationale" : "Mentioning K.U. was intrinsically linked to the story since the cooperation failure occurred in his case; this undermines the domestic court's reasoning."
+  }, {
+    "id" : "A8",
+    "side" : "applicant",
+    "text" : "After receiving new information about the financing of the sports centre, the applicants duly included it in the rebroadcast of the programme.",
+    "category" : "truth_and_verification",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "violation",
+    "rationale" : "Prompt inclusion of the business partner's account and a follow-up programme shows good faith and balance."
+  }, {
+    "id" : "A9",
+    "side" : "applicant",
+    "text" : "The domestic courts failed to strike a proper balance between the competing interests.",
+    "category" : "other",
+    "strength" : 0.55,
+    "weight" : 0.55,
+    "supports" : "violation",
+    "rationale" : "General claim about inadequate balancing; the domestic courts' terse reasoning on Article 10 lends it some weight."
+  }, {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "The applicants' conviction, the fines, and the obligation to pay costs and damages to K.U. constituted an interference with their freedom of expression.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "no_violation",
+    "rationale" : "Concession of interference; uncontested but not decisive."
+  }, {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "The interference had a basis in Finnish law, in particular Chapter 24, section 9 of the Penal Code, and pursued the legitimate aim of protecting the private life of others.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.55,
+    "weight" : 0.55,
+    "supports" : "no_violation",
+    "rationale" : "Basis in the Penal Code and protection of reputation are not disputed."
+  }, {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "Although the programme's general subject-matter, cooperation problems between the police and tax authorities, was a matter of public interest, the applicants were convicted not for raising that issue but for indirectly alleging that K.U. was guilty of an offence, which amounted to defamation.",
+    "category" : "public_interest",
+    "strength" : 0.45,
+    "weight" : 0.45,
+    "supports" : "no_violation",
+    "rationale" : "Distinguishes the general topic from the insinuation, but the insinuation was derived from accurate facts and was integral to the subject."
+  }, {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "A large number of people saw the programme; although the applicants could have been convicted of aggravated defamation on that account, the District Court did not find the offence aggravated as a whole.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "no_violation",
+    "rationale" : "Wide audience and non-aggravated finding are relevant to proportionality, but a criminal conviction remains."
+  }, {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "The addition made to the rebroadcast stating that the money came from an insurance company did not make good the false insinuation made in the first broadcast.",
+    "category" : "truth_and_verification",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "no_violation",
+    "rationale" : "The addition arguably mitigated rather than failed; since the original statement was true, there was little to cure."
+  }, {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The applicants ignored K.U.'s request to remove the parts concerning him and continued making an indirect allegation.",
+    "category" : "content_and_form",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "no_violation",
+    "rationale" : "Refusal to remove references is weak, since the press need not yield to the subject's demands, and the rebroadcast added his side."
+  }, {
+    "id" : "G7",
+    "side" : "government",
+    "text" : "The applicants did not verify the facts before the first broadcast or between the two broadcasts, although they had the possibility to do so.",
+    "category" : "truth_and_verification",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "no_violation",
+    "rationale" : "Verification is relevant, but the stated fact (police interest) was accurate and from a reliable police source."
+  }, {
+    "id" : "G8",
+    "side" : "government",
+    "text" : "The programme as a whole gave the impression that K.U. was possibly guilty of a crime, and its message did not require showing K.U.'s photograph or mentioning his name; the whole programme was structured around him.",
+    "category" : "content_and_form",
+    "strength" : 0.5,
+    "weight" : 0.5,
+    "supports" : "no_violation",
+    "rationale" : "The structure around K.U. with trial footage and photograph is the strongest point, but journalists choose presentation and K.U. was central to the investigation."
+  }, {
+    "id" : "G9",
+    "side" : "government",
+    "text" : "The applicants had admitted before the Court of Appeal that K.U. was not the subject of the programme but now argued the contrary before the Court.",
+    "category" : "other",
+    "strength" : 0.2,
+    "weight" : 0.2,
+    "supports" : "no_violation",
+    "rationale" : "An alleged inconsistency in the applicants' submissions has little bearing on the Article 10 balance."
+  }, {
+    "id" : "G10",
+    "side" : "government",
+    "text" : "The domestic courts properly found that the applicants must have considered it very likely that the programme contained a false insinuation aimed at K.U., and thus acted with intent.",
+    "category" : "truth_and_verification",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "no_violation",
+    "rationale" : "Relies on a domestic finding of intent poorly reasoned given the accuracy of the facts."
+  }, {
+    "id" : "G11",
+    "side" : "government",
+    "text" : "The applicants did not seek legal advice on publishing K.U.'s name and photograph, either before the first broadcast or after K.U. contacted them.",
+    "category" : "other",
+    "strength" : 0.15,
+    "weight" : 0.15,
+    "supports" : "no_violation",
+    "rationale" : "Failure to seek legal advice is marginally relevant to the standard of care."
+  }, {
+    "id" : "G12",
+    "side" : "government",
+    "text" : "Even though K.U. could be considered a public figure, that did not justify making a false insinuation about him.",
+    "category" : "status_of_person",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "no_violation",
+    "rationale" : "K.U. was a well-known businessman on trial for economic crimes, so he must tolerate wider criticism; the argument presupposes a false insinuation."
+  }, {
+    "id" : "G13",
+    "side" : "government",
+    "text" : "The sanctions were modest and considerably smaller than in some previous cases, so the interference was proportionate and a fair balance was struck between the competing interests.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "no_violation",
+    "rationale" : "The sums were modest, but a criminal conviction of journalists carries a chilling effect the Court views seriously."
+  } ]
+};
+
+const COLORS = {
+  public_interest: "#2f7fc1", status_of_person: "#8e5bb5", prior_conduct: "#c2408a",
+  truth_and_verification: "#1a9a7f", content_and_form: "#d3732a", severity_of_sanction: "#b8962e",
+  lawfulness_and_aim: "#6b7785", other: "#9aa1a8"
+};
+const LABELS = { violation: "הפרה", no_violation: "אין הפרה" };
+const css = getComputedStyle(document.documentElement);
+const decisionColor = d => css.getPropertyValue(d === "violation" ? "--violation" : "--no-violation").trim();
+
+document.getElementById("title").textContent = DATA.title + " (" + DATA.caseId + ")";
+document.getElementById("predicted").textContent = LABELS[DATA.predictedOutcome] || DATA.predictedOutcome;
+document.getElementById("actual").textContent = LABELS[DATA.actualOutcome];
+const match = document.getElementById("match");
+match.textContent = DATA.predictedOutcome === DATA.actualOutcome ? "✓ נכון" : "✗ לא נכון";
+match.className = DATA.predictedOutcome === DATA.actualOutcome ? "ok" : "bad";
+
+const maxScore = Math.max(...Object.values(DATA.scores), 0.001);
+document.getElementById("bars").innerHTML = Object.entries(DATA.scores).map(([d, v]) =>
+  `<div class="bar"><span class="label">${LABELS[d]}</span>
+     <span class="track"><span class="fill" style="display:block;width:${(v / maxScore) * 100}%;background:${decisionColor(d)}"></span></span>
+     <span class="num">${v.toFixed(2)}</span></div>`).join("");
+
+// פריסה: טיעוני המבקש משמאל → "הפרה"; טיעוני הממשלה מימין → "אין הפרה"
+const applicant = DATA.arguments.filter(a => a.side === "applicant");
+const government = DATA.arguments.filter(a => a.side === "government");
+const rowGap = 58, padTop = 40;
+const height = padTop * 2 + Math.max(applicant.length, government.length, 2) * rowGap;
+const W = 1000, colA = 90, colG = W - 90, decA = 400, decG = 600;
+const svg = document.getElementById("graph");
+svg.setAttribute("viewBox", `0 0 ${W} ${height}`);
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs, parent = svg) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  parent.appendChild(e);
+  return e;
+};
+const yOf = (i, n) => padTop + (height - 2 * padTop) * (n === 1 ? 0.5 : i / (n - 1));
+const decY = height / 2;
+
+function drawSide(list, x, decX) {
+  list.forEach((a, i) => {
+    const y = yOf(i, list.length);
+    el("line", { x1: x, y1: y, x2: decX, y2: decY, stroke: COLORS[a.category],
+                 "stroke-width": 1 + a.weight * 9, "stroke-opacity": 0.55, "stroke-linecap": "round" });
+    a._pos = { x, y };
+  });
+}
+drawSide(applicant, colA, decA);
+drawSide(government, colG, decG);
+
+for (const [d, x] of [["violation", decA], ["no_violation", decG]]) {
+  el("rect", { x: x - 70, y: decY - 30, width: 140, height: 60, rx: 12, fill: decisionColor(d) });
+  const t = el("text", { x, y: decY + 6, "text-anchor": "middle", fill: "#fff", "font-size": 18, "font-weight": 600 });
+  t.textContent = LABELS[d];
+}
+
+for (const a of DATA.arguments) {
+  const g = el("g", { class: "node", "data-id": a.id });
+  el("circle", { cx: a._pos.x, cy: a._pos.y, r: 20, fill: COLORS[a.category] }, g);
+  const t = el("text", { x: a._pos.x, y: a._pos.y + 5, "text-anchor": "middle", fill: "#fff", "font-size": 14, "font-weight": 600 }, g);
+  t.textContent = a.id;
+  const tip = el("title", {}, g);
+  tip.textContent = `${a.id} · ${a.category} · ${a.strength.toFixed(2)}\n${a.text}`;
+  g.addEventListener("click", () => select(a.id));
+}
+
+document.getElementById("legend").innerHTML = Object.entries(COLORS)
+  .map(([c, col]) => `<span><i style="background:${col}"></i>${c}</span>`).join("");
+
+const rows = document.getElementById("rows");
+rows.innerHTML = DATA.arguments.map(a =>
+  `<tr id="row-${a.id}"><td><b>${a.id}</b></td><td>${a.side === "applicant" ? "המבקש" : "הממשלה"}</td>
+     <td><span class="chip" style="background:${COLORS[a.category]}">${a.category}</span></td>
+     <td>${a.strength.toFixed(2)}</td><td class="en"></td><td class="en"></td></tr>`).join("");
+DATA.arguments.forEach(a => {
+  const cells = document.querySelectorAll(`#row-${a.id} td.en`);
+  cells[0].textContent = a.text;
+  cells[1].textContent = a.rationale;
+});
+
+function select(id) {
+  document.querySelectorAll("tr.selected").forEach(r => r.classList.remove("selected"));
+  const row = document.getElementById("row-" + id);
+  row.classList.add("selected");
+  row.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+</body>
+</html>

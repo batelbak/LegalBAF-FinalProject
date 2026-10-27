@@ -1,0 +1,397 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QBAF Graph</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1f; --muted: #6b6b70; --line: #e2e2e0;
+    --violation: #b03a2e; --no-violation: #1f6f8b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161618; --panel: #1f1f22; --text: #ececee; --muted: #9a9aa0; --line: #333338;
+            --violation: #e06c5f; --no-violation: #5fb3d1; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Arial, sans-serif; }
+  main { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .verdict { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+  .verdict .item b { display: block; font-size: 13px; color: var(--muted); font-weight: 500; }
+  .verdict .item span { font-size: 18px; font-weight: 600; }
+  .ok { color: #2e8b57; } .bad { color: #c0392b; }
+  .bars { flex: 1 1 320px; }
+  .bar { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .bar .label { width: 90px; font-size: 13px; }
+  .bar .track { flex: 1; height: 14px; background: var(--line); border-radius: 7px; overflow: hidden; }
+  .bar .fill { height: 100%; border-radius: 7px; }
+  .bar .num { width: 52px; font-variant-numeric: tabular-nums; font-size: 13px; text-align: left; }
+  svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; margin-top: 8px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-left: 6px; vertical-align: -1px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 13px; }
+  td.en { direction: ltr; text-align: left; }
+  tr.selected { background: color-mix(in srgb, var(--no-violation) 14%, transparent); }
+  .chip { display: inline-block; padding: 1px 8px; border-radius: 10px; color: #fff; font-size: 12px; white-space: nowrap; }
+  .table-wrap { overflow-x: auto; }
+  .node { cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title"></h1>
+  <p class="sub">גרף QBAF מהטענות האמיתיות בפסק הדין. משקל קשת = ציון השופט × θ של הקטגוריה (כרגע θ = 1).</p>
+
+  <section class="panel verdict">
+    <div class="item"><b>הכרעת המערכת</b><span id="predicted"></span></div>
+    <div class="item"><b>הכרעת בית הדין</b><span id="actual"></span></div>
+    <div class="item"><b>התאמה</b><span id="match"></span></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section class="panel">
+    <svg id="graph" role="img" aria-label="QBAF graph"></svg>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>צד</th><th>קטגוריה</th><th>ציון</th><th>טיעון</th><th>נימוק השופט</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+</main>
+<script>
+const DATA = {
+  "caseId" : "001-59207",
+  "title" : "Tammer v. Estonia",
+  "actualOutcome" : "no_violation",
+  "predictedOutcome" : "no_violation",
+  "scores" : {
+    "violation" : 4.05,
+    "no_violation" : 8.25
+  },
+  "arguments" : [ {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "Article 130 of the Criminal Code, on which the conviction was based, was not formulated with sufficient precision and clarity to satisfy the 'prescribed by law' requirement.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.2,
+    "weight" : 0.2,
+    "supports" : "violation",
+    "rationale" : "Challenges foreseeability of Article 130; the provision was general but established and interpreted by courts, so the argument is weak."
+  }, {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "The conviction was not proportionate to the legitimate aim pursued and was not necessary in a democratic society.",
+    "category" : "other",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "violation",
+    "rationale" : "A general proportionality claim without specific grounds; relevant but contestable given the gratuitous wording and modest penalty."
+  }, {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "The impugned expressions should not have been qualified as insulting; the courts uncritically followed a flawed expert opinion of the Estonian Language Institute which failed to distinguish between the two terms.",
+    "category" : "content_and_form",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "violation",
+    "rationale" : "Disputes the characterisation of the words as insulting, but the domestic courts' reliance on linguistic expertise falls within their margin of appreciation."
+  }, {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "The term 'abielulõhkuja' was a statement of fact verifiable by the facts: Ms Laanaru's relationship was with a married man and had actually destroyed his family, as she herself admitted in her memoirs, and the relationship was in the public domain.",
+    "category" : "truth_and_verification",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "violation",
+    "rationale" : "Claims factual basis for 'abielulõhkuja'. Some underlying facts exist, but the term is a pejorative value judgment rather than a verifiable fact."
+  }, {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "The term 'rongaema' was a value judgment; although traditionally carrying a strong negative connotation, in today's pragmatic usage that connotation may have disappeared given radical social changes regarding single motherhood, the interview was aimed at the general public rather than linguists, and even the traditional meaning was not vulgar or insulting; it was based on Ms Laanaru's own reflections on her relationship with her child.",
+    "category" : "content_and_form",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "violation",
+    "rationale" : "Argues the connotation of 'rongaema' has softened and the word had a factual basis. This is undermined by the expert view of its strong negative meaning and by the fact that the child was cared for by grandparents."
+  }, {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "Both expressions were not disproportionate to the underlying facts and should not have been regarded as offensive.",
+    "category" : "truth_and_verification",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "violation",
+    "rationale" : "Asserts a sufficient factual basis for both terms; the facts were partly known, but the words went beyond what those facts warranted."
+  }, {
+    "id" : "A7",
+    "side" : "applicant",
+    "text" : "He did not intend to offend Ms Laanaru; the question was meant to provoke a reaction from Mr Russak rather than to state his own opinion, and concerned the attitude of the press towards a particular type of personality in Estonian society rather than Ms Laanaru as an individual.",
+    "category" : "content_and_form",
+    "strength" : 0.25,
+    "weight" : 0.25,
+    "supports" : "violation",
+    "rationale" : "Invokes question form and lack of intent. The words were evidently aimed at Laanaru personally, and the refusal to apologise weakens the claim."
+  }, {
+    "id" : "A8",
+    "side" : "applicant",
+    "text" : "The dispute was civil in nature and should not have been tried in a criminal court; the Supreme Court wrongly held that honour could be protected against value judgments only through criminal law, a position it reversed on 1 December 1997, and the availability of civil remedies made his criminal conviction a grave injustice.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "violation",
+    "rationale" : "Criticises the use of criminal rather than civil proceedings, which is relevant to chilling effect. However, this was a private prosecution with a minimal fine."
+  }, {
+    "id" : "A9",
+    "side" : "applicant",
+    "text" : "Ms Laanaru was a public figure in her own right, having held the influential post of counsellor to the Minister of the Interior, been an active social figure and editor, and having placed herself at the centre of the secret tape-recording scandal to gain publicity; she was therefore open to heightened criticism and press scrutiny.",
+    "category" : "status_of_person",
+    "strength" : 0.45,
+    "weight" : 0.45,
+    "supports" : "violation",
+    "rationale" : "Laanaru had some public role through her counsellor post and the tape scandal, but by 1996 she had left office; her public-figure status is limited."
+  }, {
+    "id" : "A10",
+    "side" : "applicant",
+    "text" : "By making her role in Mr Savisaar's first marriage and her relationship with her child a public issue herself, Ms Laanaru lessened the scope of her privacy.",
+    "category" : "prior_conduct",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "violation",
+    "rationale" : "Her memoirs did raise these private issues, but she sought to stop their publication, so her own conduct only partly reduces her privacy."
+  }, {
+    "id" : "A11",
+    "side" : "applicant",
+    "text" : "The question pursued a legitimate motive on a matter of public interest, as the tape-recording affair and other controversial measures involving Mr Savisaar while Ms Laanaru was his counsellor raised legitimate questions about the ethics and values of those in power; the expressions served the public interest in receiving information and not mere curiosity.",
+    "category" : "public_interest",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "violation",
+    "rationale" : "The tape affair and the ethics of those in power were matters of public interest, but her child-raising and marital matters contributed little to that debate."
+  }, {
+    "id" : "A12",
+    "side" : "applicant",
+    "text" : "He did not exceed the limits of acceptable criticism, his journalistic freedom outweighed Ms Laanaru's right to respect for private and family life, and the courts' decisions amounted to a form of censure likely to discourage journalists from similar criticism in the future.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "violation",
+    "rationale" : "Invokes chilling effect and the limits of acceptable criticism; this is relevant in principle, but the sanction was mild and the words gratuitous."
+  }, {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "Article 130 of the Criminal Code defined the offence of insult in sufficiently precise terms to allow the applicant to regulate his professional conduct, and its interpretation by the domestic courts did not go beyond what was reasonably foreseeable.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.75,
+    "weight" : 0.75,
+    "supports" : "no_violation",
+    "rationale" : "Article 130 had a sufficient legal basis and its application was foreseeable."
+  }, {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "The interference pursued the legitimate aim of protecting the reputation or rights of others.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.85,
+    "weight" : 0.85,
+    "supports" : "no_violation",
+    "rationale" : "Protecting reputation is plainly a legitimate aim and was undisputed."
+  }, {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "The interference corresponded to a pressing social need, was proportionate, was supported by relevant and sufficient reasons, and remained within the national margin of appreciation.",
+    "category" : "other",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "A general necessity claim; it is supported by relevant reasons and a modest sanction, though it is generic in form."
+  }, {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "The wider limits of criticism applicable to politicians and civil servants did not apply to Ms Laanaru to the same extent, as she was active in politics only as Mr Savisaar's wife, collaborator and supporter, not independently; references to the private life of an ordinary citizen, even one linked to a prominent politician, did not concern a matter of serious public interest.",
+    "category" : "status_of_person",
+    "strength" : 0.65,
+    "weight" : 0.65,
+    "supports" : "no_violation",
+    "rationale" : "Correctly notes Laanaru's derivative political role, and that her private life was of limited public concern at the time."
+  }, {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "The relationship between a woman who had left the civil service and a man who had at the time withdrawn from politics was a very private matter, and insulting comments on a private person's family life served no social purpose.",
+    "category" : "public_interest",
+    "strength" : 0.65,
+    "weight" : 0.65,
+    "supports" : "no_violation",
+    "rationale" : "Both had left office, so insulting references to her family life served little public purpose."
+  }, {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The applicant chose the words to provoke and create sensational headlines and did not act in good faith; in any event an alleged need to inform the public could not exonerate him from respecting journalistic ethics and defamation law.",
+    "category" : "truth_and_verification",
+    "strength" : 0.45,
+    "weight" : 0.45,
+    "supports" : "no_violation",
+    "rationale" : "Bad faith is asserted with limited proof, although the gratuitous wording and refusal to apologise give it some support."
+  }, {
+    "id" : "G7",
+    "side" : "government",
+    "text" : "The applicant was not convicted for describing facts or expressing critical opinion about Ms Laanaru's personality or private life, but for his choice of insulting words; describing her as having broken up a marriage or not caring for her child would not have been an insult, as the Court of Appeal pointed out.",
+    "category" : "content_and_form",
+    "strength" : 0.75,
+    "weight" : 0.75,
+    "supports" : "no_violation",
+    "rationale" : "A strong point: the conviction targeted the gratuitous form of expression, not the facts or criticism, and the idea could have been conveyed without insult."
+  }, {
+    "id" : "G8",
+    "side" : "government",
+    "text" : "The words 'rongaema' and 'abielulõhkuja' have a very special meaning in Estonian with no English equivalent, and their specific linguistic and cultural nature must be taken into account.",
+    "category" : "content_and_form",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "The linguistic and cultural specificity of the words favours deference to the domestic courts' assessment."
+  }, {
+    "id" : "G9",
+    "side" : "government",
+    "text" : "The words were used to denigrate Ms Laanaru in public opinion rather than to describe known aspects of her life; entrusting a child to grandparents is quite common in Estonia.",
+    "category" : "content_and_form",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "The words denigrated rather than informed, and the factual premise of the 'rongaema' label was weak."
+  }, {
+    "id" : "G10",
+    "side" : "government",
+    "text" : "Ms Laanaru had not placed her private life in the public domain: the interview was with another journalist, not her, and she had obtained a court order on 29 March 1996 preventing publication of her memoirs, no longer intending to make them public.",
+    "category" : "prior_conduct",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "Laanaru had sought to stop publication of her memoirs, which supports the view that she did not invite public scrutiny of her private life."
+  }, {
+    "id" : "G11",
+    "side" : "government",
+    "text" : "The proceedings were a private prosecution initiated by Ms Laanaru; the City Court attempted a settlement which the applicant refused by declining to apologise, the public prosecutor never intervened despite being invited, and the executive remained entirely neutral.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.5,
+    "weight" : 0.5,
+    "supports" : "no_violation",
+    "rationale" : "A private prosecution, an offered settlement and state neutrality all reduce concerns about state censorship."
+  }, {
+    "id" : "G12",
+    "side" : "government",
+    "text" : "The sanction was only a modest fine of 220 kroons, ten times the minimum daily salary.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.65,
+    "weight" : 0.65,
+    "supports" : "no_violation",
+    "rationale" : "A modest fine weighs significantly in favour of proportionality, even though the conviction was criminal."
+  }, {
+    "id" : "G13",
+    "side" : "government",
+    "text" : "The domestic courts balanced the Article 8 rights of Ms Laanaru against the applicant's Article 10 rights, and the Supreme Court applied the same test as the Strasbourg Court with ample reference to its case-law in a thoroughly reasoned judgment.",
+    "category" : "other",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "The domestic courts' reasoned balancing, with reference to Strasbourg case-law, supports deference under the margin of appreciation."
+  } ]
+};
+
+const COLORS = {
+  public_interest: "#2f7fc1", status_of_person: "#8e5bb5", prior_conduct: "#c2408a",
+  truth_and_verification: "#1a9a7f", content_and_form: "#d3732a", severity_of_sanction: "#b8962e",
+  lawfulness_and_aim: "#6b7785", other: "#9aa1a8"
+};
+const LABELS = { violation: "הפרה", no_violation: "אין הפרה" };
+const css = getComputedStyle(document.documentElement);
+const decisionColor = d => css.getPropertyValue(d === "violation" ? "--violation" : "--no-violation").trim();
+
+document.getElementById("title").textContent = DATA.title + " (" + DATA.caseId + ")";
+document.getElementById("predicted").textContent = LABELS[DATA.predictedOutcome] || DATA.predictedOutcome;
+document.getElementById("actual").textContent = LABELS[DATA.actualOutcome];
+const match = document.getElementById("match");
+match.textContent = DATA.predictedOutcome === DATA.actualOutcome ? "✓ נכון" : "✗ לא נכון";
+match.className = DATA.predictedOutcome === DATA.actualOutcome ? "ok" : "bad";
+
+const maxScore = Math.max(...Object.values(DATA.scores), 0.001);
+document.getElementById("bars").innerHTML = Object.entries(DATA.scores).map(([d, v]) =>
+  `<div class="bar"><span class="label">${LABELS[d]}</span>
+     <span class="track"><span class="fill" style="display:block;width:${(v / maxScore) * 100}%;background:${decisionColor(d)}"></span></span>
+     <span class="num">${v.toFixed(2)}</span></div>`).join("");
+
+// פריסה: טיעוני המבקש משמאל → "הפרה"; טיעוני הממשלה מימין → "אין הפרה"
+const applicant = DATA.arguments.filter(a => a.side === "applicant");
+const government = DATA.arguments.filter(a => a.side === "government");
+const rowGap = 58, padTop = 40;
+const height = padTop * 2 + Math.max(applicant.length, government.length, 2) * rowGap;
+const W = 1000, colA = 90, colG = W - 90, decA = 400, decG = 600;
+const svg = document.getElementById("graph");
+svg.setAttribute("viewBox", `0 0 ${W} ${height}`);
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs, parent = svg) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  parent.appendChild(e);
+  return e;
+};
+const yOf = (i, n) => padTop + (height - 2 * padTop) * (n === 1 ? 0.5 : i / (n - 1));
+const decY = height / 2;
+
+function drawSide(list, x, decX) {
+  list.forEach((a, i) => {
+    const y = yOf(i, list.length);
+    el("line", { x1: x, y1: y, x2: decX, y2: decY, stroke: COLORS[a.category],
+                 "stroke-width": 1 + a.weight * 9, "stroke-opacity": 0.55, "stroke-linecap": "round" });
+    a._pos = { x, y };
+  });
+}
+drawSide(applicant, colA, decA);
+drawSide(government, colG, decG);
+
+for (const [d, x] of [["violation", decA], ["no_violation", decG]]) {
+  el("rect", { x: x - 70, y: decY - 30, width: 140, height: 60, rx: 12, fill: decisionColor(d) });
+  const t = el("text", { x, y: decY + 6, "text-anchor": "middle", fill: "#fff", "font-size": 18, "font-weight": 600 });
+  t.textContent = LABELS[d];
+}
+
+for (const a of DATA.arguments) {
+  const g = el("g", { class: "node", "data-id": a.id });
+  el("circle", { cx: a._pos.x, cy: a._pos.y, r: 20, fill: COLORS[a.category] }, g);
+  const t = el("text", { x: a._pos.x, y: a._pos.y + 5, "text-anchor": "middle", fill: "#fff", "font-size": 14, "font-weight": 600 }, g);
+  t.textContent = a.id;
+  const tip = el("title", {}, g);
+  tip.textContent = `${a.id} · ${a.category} · ${a.strength.toFixed(2)}\n${a.text}`;
+  g.addEventListener("click", () => select(a.id));
+}
+
+document.getElementById("legend").innerHTML = Object.entries(COLORS)
+  .map(([c, col]) => `<span><i style="background:${col}"></i>${c}</span>`).join("");
+
+const rows = document.getElementById("rows");
+rows.innerHTML = DATA.arguments.map(a =>
+  `<tr id="row-${a.id}"><td><b>${a.id}</b></td><td>${a.side === "applicant" ? "המבקש" : "הממשלה"}</td>
+     <td><span class="chip" style="background:${COLORS[a.category]}">${a.category}</span></td>
+     <td>${a.strength.toFixed(2)}</td><td class="en"></td><td class="en"></td></tr>`).join("");
+DATA.arguments.forEach(a => {
+  const cells = document.querySelectorAll(`#row-${a.id} td.en`);
+  cells[0].textContent = a.text;
+  cells[1].textContent = a.rationale;
+});
+
+function select(id) {
+  document.querySelectorAll("tr.selected").forEach(r => r.classList.remove("selected"));
+  const row = document.getElementById("row-" + id);
+  row.classList.add("selected");
+  row.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,128 @@
+{
+  "caseId" : "001-102358",
+  "title" : "Novaya Gazeta v Voronezhe v. Russia",
+  "actualOutcome" : "violation",
+  "predictedOutcome" : "violation",
+  "scores" : {
+    "violation" : 3.95,
+    "no_violation" : 2.35
+  },
+  "arguments" : [ {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "The disputed statements in the article were supported by the stadium report and the audit report issued by the Audit Department of the Ministry of Finance for the Voronezh Region.",
+    "category" : "truth_and_verification",
+    "strength" : 0.8,
+    "weight" : 0.8,
+    "supports" : "violation",
+    "rationale" : "Reliance on an official audit report is a strong factual basis; the Court accepts that journalists may rely on official reports without independent verification."
+  }, {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "It had been impossible to use the reports as evidence because the author had only ordinary copies, not originals or certified copies, and the domestic courts refused to request the originals or certified copies.",
+    "category" : "truth_and_verification",
+    "strength" : 0.8,
+    "weight" : 0.8,
+    "supports" : "violation",
+    "rationale" : "The courts' refusal to obtain the originals deprived the applicant of a realistic chance to prove truth, despite its diligent efforts; this is a compelling procedural fairness point."
+  }, {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "The domestic courts' refusal to request the originals or certified copies of the reports had a chilling effect on journalists in possession of ordinary copies of official documents capable of disclosing a matter of public interest.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "violation",
+    "rationale" : "This is a chilling-effect argument about deterring journalists who rely on official documents. It is relevant, though somewhat general compared with the concrete defects in the proof."
+  }, {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "The refusal to open criminal proceedings concerning the facts described in the reports could not, in itself, render the information contained in them false.",
+    "category" : "truth_and_verification",
+    "strength" : 0.7,
+    "weight" : 0.7,
+    "supports" : "violation",
+    "rationale" : "The point is correct: a refusal to prosecute does not show that the audit findings were false. The trial court relied on such refusals, so the argument carries real weight."
+  }, {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "The requirement to prove the truth of a value judgment is not compatible with freedom of expression, yet the courts required the applicant to prove value judgments.",
+    "category" : "truth_and_verification",
+    "strength" : 0.75,
+    "weight" : 0.75,
+    "supports" : "violation",
+    "rationale" : "The Court's established case-law holds that value judgments are not susceptible of proof. Several passages, such as the rhetorical questions and the 'honest mayor' irony, were evaluative, yet the domestic courts demanded proof of conjectures."
+  }, {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "The trial court's reasoning for refusing to request certified copies of the documents had been communicated to counsel only via unofficial channels; the trial minutes contained no reference to that reasoning, which is why counsel referred to it in the appeal statement.",
+    "category" : "other",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "violation",
+    "rationale" : "This is a procedural explanation of how counsel learned of the trial court's reasoning. It is of marginal weight in itself."
+  }, {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "The disputed statements were statements of fact and not value judgments.",
+    "category" : "truth_and_verification",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "no_violation",
+    "rationale" : "Some statements, such as party membership and the 20 million figure, are factual. Others are clearly value judgments or questions, so this blanket characterisation is only partly sustainable."
+  }, {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "The domestic courts independently assessed the evidence before them and decided on its relevance; the trial court had sufficient evidence submitted by the parties to decide the civil dispute without using other evidence.",
+    "category" : "truth_and_verification",
+    "strength" : 0.25,
+    "weight" : 0.25,
+    "supports" : "no_violation",
+    "rationale" : "Deference to domestic assessment of evidence is limited where the courts excluded the very evidence that underpinned the defence; the argument is weak on these facts."
+  }, {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "The trial court's refusal to request the originals of the audit and stadium reports was well-reasoned and the applicant had been duly notified of the reasons.",
+    "category" : "truth_and_verification",
+    "strength" : 0.2,
+    "weight" : 0.2,
+    "supports" : "no_violation",
+    "rationale" : "The judgment gave no reasons for the refusal, and the reasons that were reported informally (pending police proceedings) are unpersuasive. The claim is poorly supported."
+  }, {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "The applicant could have complained to a court about the prosecutor's office's failure to provide the originals, but did not do so; and if the reasons were not recorded in the trial minutes, it could have requested modification of the minutes under domestic law.",
+    "category" : "other",
+    "strength" : 0.2,
+    "weight" : 0.2,
+    "supports" : "no_violation",
+    "rationale" : "This is a quasi-non-exhaustion and procedural-diligence point. The applicant made extensive efforts, and the burden to secure the evidence reasonably lay with the court, so the argument has little weight."
+  }, {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "The judgment was based on Article 152 of the Civil Code because the applicant failed to prove the veracity of the statements made in the article.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "no_violation",
+    "rationale" : "Article 152 provides a legal basis, so the interference was prescribed by law. However, the argument does not address proportionality or the burden of proving value judgments."
+  }, {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The interference pursued the legitimate aim of protecting the rights of others.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "Protecting the reputation of others is plainly a legitimate aim and would be accepted. It carries little weight on the decisive necessity issue."
+  }, {
+    "id" : "G7",
+    "side" : "government",
+    "text" : "The interference was necessary in a democratic society because the article suggested that the plaintiffs had committed illegal acts, creating a pressing need to protect them and prevent careless use of such serious allegations.",
+    "category" : "public_interest",
+    "strength" : 0.35,
+    "weight" : 0.35,
+    "supports" : "no_violation",
+    "rationale" : "Allegations of illegal acts merit protection. However, the targets were officials discussed in a matter of strong public interest, and the article was based on an official audit, so the pressing need claimed is weak."
+  } ]
+}

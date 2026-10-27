@@ -1,0 +1,154 @@
+[ {
+  "argument" : {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "In a democratic society it is not necessary to resort to penal sanctions to curtail freedom of expression; criminal law has an unduly chilling effect on freedom of expression, particularly for journalists, who do not have their own sources but rely on others for information."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.5,
+  "rationale" : "Concerns the chilling effect of criminal sanctions; relevant under the case-law, though the Court does not consider criminal defamation incompatible per se, and here only a minimum administrative fine was imposed."
+}, {
+  "argument" : {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "Criminal liability is problematic because journalists work and verify information in teams, whereas penal sanctions are individual."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.25,
+  "rationale" : "Abstract critique of individual criminal liability for teamwork journalism; it has little bearing on the proportionality of this particular sanction."
+}, {
+  "argument" : {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "Requiring defendants in defamation proceedings to prove the truth of their statements is disproportionate. The courts examine only the truth of the statements and do not examine the reputation of the person allegedly defamed, which is wrongly assumed to be good. This leads to abuse of rights and de facto no-fault liability."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.25,
+  "rationale" : "Attacks the burden of proving truth; the Court accepts that defendants may be required to prove factual statements, so this argument is weak."
+}, {
+  "argument" : {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "The courts did not consider the extent to which the allegations actually affected Mr M. D.'s reputation. They wrongly held him defamed because of a simple mistake in the names of the companies through which he featured on the bad debtors' list."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.4,
+  "rationale" : "Characterises the falsity as a minor error about company names; this is contestable because the domestic courts found that the specific false details were the core of the defamation."
+}, {
+  "argument" : {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "The publication did not materially affect Mr M. D.'s standing in society. Its purpose was to inform the public about the candidates for deputy Minister of Finance, and the availability of information on that topic mattered more than the identity of the company through which he featured on the list."
+  },
+  "category" : "PUBLIC_INTEREST",
+  "strength" : 0.6,
+  "rationale" : "The article concerned a candidate for deputy finance minister and the credit-millionaires issue, clearly a matter of public interest, though this does not excuse false specifics."
+}, {
+  "argument" : {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "The finding that the statement was untrue was erroneous. Only the names of the companies were wrong; Mr M. D. was in fact a 'credit millionaire', as shown by his participation in Vitaplant OOD. Her error was induced by the Members of Parliament who tipped her off."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.4,
+  "rationale" : "Points to a factual basis via Vitaplant OOD, but the courts found that link indirect and insubstantial, and the precise allegations about three named companies were false."
+}, {
+  "argument" : {
+    "id" : "A7",
+    "side" : "applicant",
+    "text" : "The Government's claim that she did not consult the Bulgarian National Bank list conflicts with the Sofia City Court's own finding that Mr M. D. featured on that list through Vitaplant OOD, which she proved."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.3,
+  "rationale" : "Notes an inconsistency in the verification critique, but proving a link after the fact does not show she consulted the list before publishing."
+}, {
+  "argument" : {
+    "id" : "A8",
+    "side" : "applicant",
+    "text" : "The Sofia City Court's ruling that she had to check the register of companies was excessive. No such obligation existed, and the check would have been unfeasible given the time it would have taken."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.4,
+  "rationale" : "Disputes the extent of the duty to verify; the register was public and the courts found she had time to check it, so the argument is only partially persuasive."
+}, {
+  "argument" : {
+    "id" : "A9",
+    "side" : "applicant",
+    "text" : "The domestic courts erred in not calling the Members of Parliament she had spoken to, whose names emerged from Ms N.'s testimony. These MPs, one of whom was a business associate of Mr M. D., tricked her into publishing inaccurate information in order to procure a judgment declaring that he was not a 'credit millionaire' and to conceal his involvement in Vitaplant OOD."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.2,
+  "rationale" : "Speculative manipulation theory; she herself refused to name the MP, which undermines her complaint about the courts not calling the witnesses."
+}, {
+  "argument" : {
+    "id" : "A10",
+    "side" : "applicant",
+    "text" : "Mr M. D. suffered no real prejudice to his reputation, because through Vitaplant OOD he had taken out loans and failed to repay them, as shown by contracts he himself produced in court."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.3,
+  "rationale" : "Claims his reputation was not harmed because he was in substance a bad debtor; the courts found no direct, substantial link, which weakens the argument."
+}, {
+  "argument" : {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "Journalists' freedom of expression should not be exercised by damaging individuals' reputations. The key question is whether the journalist fulfilled her duty to ensure the accuracy of the information. Here the public was misled because the information was untrue."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.65,
+  "rationale" : "Correctly invokes the journalist's duty to act in good faith and provide accurate information; the specific statements were untrue."
+}, {
+  "argument" : {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "Journalists relying on an official document need not verify its accuracy. However, the applicant neither consulted the official BNB list nor checked the register of companies. She trusted her sources without verification, although Trud's book and its preface were not an official publication."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.65,
+  "rationale" : "She did not see the official document she cited and relied on secondary sources; this is a fair point about inadequate verification of specific factual claims."
+}, {
+  "argument" : {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "The applicant failed to carry out a proper journalistic enquiry. She supported her allegation with specific but untrue statements that created a false impression of verified, authentic information, and she admitted at trial that she had not properly verified it."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.65,
+  "rationale" : "The false precise details gave a misleading appearance of an authenticated official source; this is a strong point on verification and good faith."
+}, {
+  "argument" : {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "The statement was negative, led to grave public disapproval of Mr M. D., and was presented as a statement of fact. It therefore required serious proof."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.6,
+  "rationale" : "A serious factual allegation does require a sufficient factual basis, though the term 'credit millionaire' was a common label in public debate."
+}, {
+  "argument" : {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "Both domestic courts allowed the parties to adduce evidence on the truth of the allegation and found it untrue, giving ample reasons. The Sofia City Court specifically addressed the argument concerning Mr M. D.'s participation in another company."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.55,
+  "rationale" : "The courts allowed evidence on truth on appeal and gave reasons, which supports the procedural fairness of the defamation proceedings."
+}, {
+  "argument" : {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The remedy used by Mr M. D., a private criminal complaint with a civil claim, was ordinary and available to anyone whose reputation is attacked."
+  },
+  "category" : "LAWFULNESS_AND_AIM",
+  "strength" : 0.4,
+  "rationale" : "The remedy was prescribed by law and pursued protection of reputation; this is uncontested but carries little weight on proportionality."
+}, {
+  "argument" : {
+    "id" : "G7",
+    "side" : "government",
+    "text" : "The courts waived the applicant's criminal liability and imposed only an administrative punishment, and the damages awarded were not unreasonable."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.6,
+  "rationale" : "A minimum administrative fine and moderate damages weigh in favour of proportionality, although the conviction still remains criminal in nature."
+} ]

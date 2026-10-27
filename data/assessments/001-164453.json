@@ -1,0 +1,152 @@
+[
+  {
+    "argument": {
+      "id": "A1",
+      "side": "applicant",
+      "text": "He had not harmed other people's good name or violated their rights; he had not even put the initials of the district officials in his article."
+    },
+    "category": "OTHER",
+    "strength": 0.2,
+    "rationale": "Concerns identifiability of the persons targeted; the domestic courts found the officials easily identifiable from the context and earlier articles, so the argument is weak."
+  },
+  {
+    "argument": {
+      "id": "A2",
+      "side": "applicant",
+      "text": "He had respected the principle of accuracy required of journalists under the Press Act; relying on the Constitutional Court's judgment of 12 May 2008, a person accused of insult should not be held liable if he complied with standards of accuracy and reliability in gathering and verifying information, even if the allegations proved false."
+    },
+    "category": "TRUTH_AND_VERIFICATION",
+    "strength": 0.25,
+    "rationale": "Invokes the accuracy and verification standards, but the conviction was for insult through value-laden epithets, not false factual allegations, so verification is largely beside the point."
+  },
+  {
+    "argument": {
+      "id": "A3",
+      "side": "applicant",
+      "text": "He had accurately reported on the quail farm project having been appropriated by local officials, and the interference with his right to present his opinion on negative phenomena in local life was unjustified; the Press Act and the Constitution enable free and independent media to criticise the exercise of power by local government."
+    },
+    "category": "PUBLIC_INTEREST",
+    "strength": 0.8,
+    "rationale": "Criticism of a local government unemployment initiative is clearly a matter of public interest, leaving narrow margin for restriction. This is central to the Court's assessment."
+  },
+  {
+    "argument": {
+      "id": "A4",
+      "side": "applicant",
+      "text": "He had not insulted any person, since he used no names or initials and criticised only methods and acts, without mentioning the office concerned; the words were not directed at anyone personally but at the problem of populist activity by the authorities and the supposed work of local officials."
+    },
+    "category": "CONTENT_AND_FORM",
+    "strength": 0.45,
+    "rationale": "Argues the words targeted conduct and populism rather than persons. This is partly plausible, since the article criticises methods, but the courts found personal targeting."
+  },
+  {
+    "argument": {
+      "id": "A5",
+      "side": "applicant",
+      "text": "Dictionaries did not list the words used as insulting expressions."
+    },
+    "category": "CONTENT_AND_FORM",
+    "strength": 0.2,
+    "rationale": "Dictionary meaning is of limited relevance; context determines offensiveness, though the words are not among the gravest insults."
+  },
+  {
+    "argument": {
+      "id": "A6",
+      "side": "applicant",
+      "text": "Public figures must accept the risk of being exposed to more severe criticism."
+    },
+    "category": "STATUS_OF_PERSON",
+    "strength": 0.7,
+    "rationale": "The plaintiffs were a district mayor and officials acting in a public capacity, so wider limits of criticism apply. Civil servants' limits are somewhat narrower than politicians', but the argument is still strong."
+  },
+  {
+    "argument": {
+      "id": "A7",
+      "side": "applicant",
+      "text": "Journalistic criticism need not be devoid of personal feelings or emotional engagement; newspapers are not government bulletins recording only facts, and emotionless publications would not be read, so a journalist cannot be forced to write without emotional engagement."
+    },
+    "category": "CONTENT_AND_FORM",
+    "strength": 0.7,
+    "rationale": "Journalistic freedom covers a degree of exaggeration and provocation, and the domestic demand for emotion-free criticism conflicts with the Court's case-law."
+  },
+  {
+    "argument": {
+      "id": "A8",
+      "side": "applicant",
+      "text": "The punishment was disproportionate, having led to the gradual economic downfall of the newspaper."
+    },
+    "category": "SEVERITY_OF_SANCTION",
+    "strength": 0.65,
+    "rationale": "A criminal conviction with a substantial fine for a small local weekly carries a chilling effect. The claim of economic downfall is not substantiated in detail, but the severity is relevant."
+  },
+  {
+    "argument": {
+      "id": "A9",
+      "side": "applicant",
+      "text": "The limits of acceptable criticism in such a case should have been determined through civil rather than criminal law."
+    },
+    "category": "SEVERITY_OF_SANCTION",
+    "strength": 0.6,
+    "rationale": "The Court favours restraint in resorting to criminal proceedings for press expression, especially concerning criticism of public officials."
+  },
+  {
+    "argument": {
+      "id": "G1",
+      "side": "government",
+      "text": "The interference was prescribed by law, namely Article 216 of the Criminal Code, and pursued the legitimate aim of protecting the reputation or rights of others."
+    },
+    "category": "LAWFULNESS_AND_AIM",
+    "strength": 0.6,
+    "rationale": "The interference was undisputedly prescribed by Article 216 of the Criminal Code and pursued protection of reputation, but this does not settle necessity."
+  },
+  {
+    "argument": {
+      "id": "G2",
+      "side": "government",
+      "text": "While there is little scope under Article 10 § 2 for restrictions on political speech or debate on matters of public interest, the domestic courts gave relevant and sufficient reasons and thoroughly justified their finding that the applicant's statements amounted to insult."
+    },
+    "category": "OTHER",
+    "strength": 0.3,
+    "rationale": "The domestic courts focused on the private-conflict motive and an emotion-free standard, without properly weighing the public-interest context, so their reasons are contestable as relevant and sufficient."
+  },
+  {
+    "argument": {
+      "id": "G3",
+      "side": "government",
+      "text": "The applicant overstepped the limits of acceptable criticism."
+    },
+    "category": "CONTENT_AND_FORM",
+    "strength": 0.4,
+    "rationale": "The language was crude and offensive, which gives some weight to the claim, but in the context of a public debate on a local initiative it arguably stays within permissible exaggeration."
+  },
+  {
+    "argument": {
+      "id": "G4",
+      "side": "government",
+      "text": "The fine of PLN 10,000 was calculated in the light of the applicant's financial situation; the courts chose not to impose restriction of liberty or imprisonment, and the penalty was the most lenient available and proportionate to his guilt and the social danger of his act."
+    },
+    "category": "SEVERITY_OF_SANCTION",
+    "strength": 0.35,
+    "rationale": "A fine is the most lenient type of penalty available, but it is still a criminal conviction with a considerable sum, so the argument has only moderate force."
+  },
+  {
+    "argument": {
+      "id": "G5",
+      "side": "government",
+      "text": "The Constitutional Court (P 10/06 and SK 43/05) stressed that while freedom of expression is important, individual dignity must also be protected and may prevail; criminal-law protection of reputation and good name is not unconstitutional in itself, since the consequences of an attack on a person's good name cannot be reversed and later apologies cannot eradicate it."
+    },
+    "category": "OTHER",
+    "strength": 0.3,
+    "rationale": "Domestic constitutional case-law shows criminal defamation is not per se incompatible with the Convention, but it does not address proportionality on these facts."
+  },
+  {
+    "argument": {
+      "id": "G6",
+      "side": "government",
+      "text": "The criminal proceedings were initiated by a private bill of indictment lodged by private individuals, not by a public prosecutor."
+    },
+    "category": "SEVERITY_OF_SANCTION",
+    "strength": 0.15,
+    "rationale": "Private prosecution does not change the criminal nature of the sanction or its chilling effect, and the prosecutors acted as officials."
+  }
+]

@@ -1,0 +1,47 @@
+/* צבעים, גופנים ובסיס. בהיר כברירת מחדל, כהה לפי הגדרות המערכת. */
+:root {
+  --paper: #F4F6F9;
+  --surface: #FFFFFF;
+  --ink: #15213A;
+  --muted: #5A6478;
+  --line: #D8DDE6;
+  --masthead: #15213A;
+  --masthead-ink: #EEF1F6;
+  --brass: #94743F;
+  --brass-soft: #F3ECDF;
+  --pros: #8C2B3A;
+  --pros-soft: #F6E7E9;
+  --def: #23538A;
+  --def-soft: #E5EDF6;
+  --unweighed: #A3ABBA;
+  --font-display: "Libre Caslon Text", "Georgia", "Times New Roman", serif;
+  --font-body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "Consolas", "Menlo", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1420; --surface: #161F31; --ink: #E5E9F0; --muted: #9AA4B7; --line: #2A3550;
+    --masthead: #0A0F1A; --masthead-ink: #E5E9F0; --brass: #CFAB70; --brass-soft: #2B2618;
+    --pros: #D9717F; --pros-soft: #2E1A20; --def: #73A3DA; --def-soft: #15243A; --unweighed: #5C667A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1420; --surface: #161F31; --ink: #E5E9F0; --muted: #9AA4B7; --line: #2A3550;
+  --masthead: #0A0F1A; --masthead-ink: #E5E9F0; --brass: #CFAB70; --brass-soft: #2B2618;
+  --pros: #D9717F; --pros-soft: #2E1A20; --def: #73A3DA; --def-soft: #15243A; --unweighed: #5C667A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+button, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+[hidden] { display: none !important; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+.muted { color: var(--muted); }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

@@ -1,0 +1,846 @@
+<title>LegalBAF Courtroom</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:wght@400;700&family=Source+Sans+3:wght@400;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a court record. Navy masthead, case caption, then three panes: hearing record | argument graph | the bench. */
+:root {
+  --paper: #F4F6F9;
+  --surface: #FFFFFF;
+  --ink: #15213A;
+  --muted: #5A6478;
+  --line: #D8DDE6;
+  --masthead: #15213A;
+  --masthead-ink: #EEF1F6;
+  --brass: #94743F;
+  --brass-soft: #F3ECDF;
+  --pros: #8C2B3A;
+  --pros-soft: #F6E7E9;
+  --def: #23538A;
+  --def-soft: #E5EDF6;
+  --unweighed: #A3ABBA;
+  --font-display: "Libre Caslon Text", "Georgia", "Times New Roman", serif;
+  --font-body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --font-mono: "IBM Plex Mono", "Consolas", "Menlo", monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0E1420; --surface: #161F31; --ink: #E5E9F0; --muted: #9AA4B7; --line: #2A3550;
+    --masthead: #0A0F1A; --masthead-ink: #E5E9F0; --brass: #CFAB70; --brass-soft: #2B2618;
+    --pros: #D9717F; --pros-soft: #2E1A20; --def: #73A3DA; --def-soft: #15243A; --unweighed: #5C667A;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0E1420; --surface: #161F31; --ink: #E5E9F0; --muted: #9AA4B7; --line: #2A3550;
+  --masthead: #0A0F1A; --masthead-ink: #E5E9F0; --brass: #CFAB70; --brass-soft: #2B2618;
+  --pros: #D9717F; --pros-soft: #2E1A20; --def: #73A3DA; --def-soft: #15243A; --unweighed: #5C667A;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-size: 15px; line-height: 1.5; }
+body::before { content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px); z-index: 10; background: var(--masthead); }
+button, select, textarea { font: inherit; color: inherit; }
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 2px; }
+.mono { font-family: var(--font-mono); font-variant-numeric: tabular-nums; }
+
+.app { display: flex; flex-direction: column; min-height: 100%; }
+
+/* Masthead */
+.masthead { background: var(--masthead); color: var(--masthead-ink); padding-block: 12px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); display: flex; align-items: center; gap: 16px; flex-wrap: wrap; border-bottom: 3px solid var(--brass); }
+.brand { display: flex; align-items: center; gap: 12px; }
+.brand svg { width: 30px; height: 30px; color: var(--brass); flex: none; }
+.brand-name { font-family: var(--font-display); font-size: 22px; letter-spacing: 0.02em; }
+.brand-sub { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; }
+.masthead .spacer { flex: 1; }
+.proto { font-size: 12px; border: 1px solid color-mix(in srgb, var(--masthead-ink) 35%, transparent); border-radius: 999px; padding: 3px 10px; opacity: 0.85; }
+
+/* Case caption */
+.caption { background: var(--surface); border-bottom: 1px solid var(--line); padding-block: 14px; padding-left: max(24px, env(safe-area-inset-left, 0px)); padding-right: max(24px, env(safe-area-inset-right, 0px)); display: flex; gap: 24px; align-items: flex-end; flex-wrap: wrap; }
+.caption-main { flex: 1 1 520px; min-width: 0; }
+.eyebrow { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.case-title { font-family: var(--font-display); font-size: 26px; line-height: 1.2; margin: 2px 0 4px; text-wrap: balance; }
+.case-title em { font-style: italic; font-weight: 400; }
+.case-summary { color: var(--muted); max-width: 95ch; margin: 0; font-size: 14px; }
+.controls { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
+.btn { border: 1px solid var(--line); background: var(--surface); padding: 7px 14px; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; }
+.btn:hover { border-color: var(--ink); }
+.btn.primary { background: var(--ink); color: var(--surface); border-color: var(--ink); }
+.btn.primary:hover { opacity: 0.9; }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.select { border: 1px solid var(--line); background: var(--surface); padding: 7px 10px; border-radius: 4px; font-size: 14px; }
+.status { font-size: 13px; color: var(--muted); display: flex; align-items: center; gap: 8px; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: var(--unweighed); }
+.dot.live { background: var(--pros); animation: pulse 1.2s infinite; }
+.dot.done { background: var(--brass); }
+@keyframes pulse { 50% { opacity: 0.3; } }
+
+/* Panes */
+.panes { flex: 1; display: grid; grid-template-columns: minmax(300px, 380px) minmax(0, 1fr) minmax(280px, 340px); gap: 0; min-height: 0; }
+.pane { min-width: 0; min-height: 0; display: flex; flex-direction: column; border-right: 1px solid var(--line); }
+.pane:last-child { border-right: none; }
+.pane-head { padding: 12px 18px 10px; border-bottom: 1px solid var(--line); display: flex; align-items: baseline; justify-content: space-between; gap: 8px; background: var(--surface); }
+.pane-title { font-family: var(--font-display); font-size: 17px; margin: 0; }
+.pane-note { font-size: 12px; color: var(--muted); }
+
+/* Hearing record */
+.record { flex: 1; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; min-height: 200px; }
+.record > * { flex: none; }
+.round-mark { text-align: center; font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 10px; margin-top: 4px; }
+.round-mark::before, .round-mark::after { content: ""; flex: 1; border-top: 1px solid var(--line); }
+.entry { border-left: 3px solid var(--line); padding: 8px 12px; background: var(--surface); border-radius: 0 4px 4px 0; animation: rise 0.35s ease-out; }
+.entry.pros { border-left-color: var(--pros); }
+.entry.def { border-left-color: var(--def); }
+.entry.user { box-shadow: inset 0 0 0 1px var(--brass); }
+.entry.ruling { border-left-color: var(--brass); background: var(--brass-soft); padding: 6px 12px; }
+.entry.flash { box-shadow: inset 0 0 0 2px var(--brass); }
+.entry-head { display: flex; gap: 8px; align-items: baseline; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; text-transform: uppercase; }
+.entry.pros .entry-head { color: var(--pros); }
+.entry.def .entry-head { color: var(--def); }
+.entry.ruling .entry-head { color: var(--brass); }
+.entry-id { font-family: var(--font-mono); font-size: 12px; text-transform: none; letter-spacing: 0; }
+.entry-text { margin: 4px 0 0; font-size: 14px; }
+.entry.ruling .entry-text { font-size: 13px; color: var(--muted); font-style: italic; }
+.typing { display: inline-flex; gap: 4px; padding: 6px 0 2px; }
+.typing i { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: blink 1s infinite; }
+.typing i:nth-child(2) { animation-delay: 0.15s; }
+.typing i:nth-child(3) { animation-delay: 0.3s; }
+@keyframes blink { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+@keyframes rise { from { transform: translateY(6px); opacity: 0.2; } to { transform: none; opacity: 1; } }
+.empty { color: var(--muted); font-size: 14px; margin: auto 0; text-align: center; padding: 24px 8px; }
+
+/* Composer */
+.composer { border-top: 1px solid var(--line); background: var(--surface); padding: 12px 18px 14px; display: flex; flex-direction: column; gap: 8px; }
+.composer-label { font-family: var(--font-display); font-size: 15px; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+.seg button { border: none; background: transparent; padding: 5px 12px; font-size: 13px; font-weight: 600; cursor: pointer; color: var(--muted); }
+.seg button[aria-pressed="true"].pros { background: var(--pros); color: var(--surface); }
+.seg button[aria-pressed="true"].def { background: var(--def); color: var(--surface); }
+.composer textarea { width: 100%; min-height: 64px; resize: vertical; border: 1px solid var(--line); border-radius: 4px; padding: 8px 10px; background: var(--paper); font-size: 14px; }
+.composer-row { display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap; }
+.hint { font-size: 12px; color: var(--muted); }
+
+/* Graph */
+.graph-pane { background: var(--paper); }
+.graph-wrap { flex: 1; position: relative; min-height: 360px; padding: 8px 12px; overflow-x: auto; }
+#graph { width: 100%; height: 100%; min-width: 560px; display: block; }
+.legend { display: flex; gap: 16px; flex-wrap: wrap; font-size: 12px; color: var(--muted); padding: 8px 18px 12px; border-top: 1px solid var(--line); background: var(--surface); }
+.legend span { display: inline-flex; align-items: center; gap: 6px; }
+.sw { width: 18px; height: 0; border-top: 3px solid; display: inline-block; }
+.node-arg { cursor: pointer; }
+.node-arg.enter { animation: pop 0.45s ease-out; transform-box: fill-box; transform-origin: center; }
+@keyframes pop { from { transform: scale(0.3); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+.edge { fill: none; transition: stroke-width 0.6s ease; }
+.edge.unweighed { stroke: var(--unweighed); stroke-dasharray: 5 5; stroke-width: 1.5; animation: dash 1s linear infinite; }
+@keyframes dash { to { stroke-dashoffset: -20; } }
+.verdict { position: absolute; left: 50%; bottom: 14px; transform: translateX(-50%); background: var(--surface); border: 1px solid var(--brass); border-top: 4px solid var(--brass); padding: 10px 18px; text-align: center; box-shadow: 0 8px 24px rgba(10, 20, 40, 0.12); min-width: 300px; max-width: calc(100% - 24px); animation: rise 0.5s ease-out; }
+.verdict-k { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--brass); font-weight: 700; }
+.verdict-v { font-family: var(--font-display); font-size: 21px; margin: 2px 0; }
+.verdict-s { font-size: 13px; color: var(--muted); }
+
+/* Bench */
+.bench { flex: 1; overflow-y: auto; padding: 14px 18px; display: flex; flex-direction: column; gap: 16px; }
+.block-title { font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); font-weight: 700; margin: 0 0 8px; }
+.balance { display: flex; flex-direction: column; gap: 6px; }
+.balance-bar { display: flex; height: 14px; border-radius: 2px; overflow: hidden; background: var(--line); }
+.balance-bar .p { background: var(--pros); transition: width 0.6s ease; }
+.balance-bar .d { background: var(--def); transition: width 0.6s ease; }
+.balance-nums { display: flex; justify-content: space-between; font-size: 13px; }
+.balance-nums b { font-family: var(--font-mono); font-size: 18px; display: block; }
+.balance-nums .r { text-align: right; }
+.lead { font-size: 13px; padding: 6px 10px; border-radius: 4px; background: var(--brass-soft); border: 1px solid color-mix(in srgb, var(--brass) 40%, transparent); }
+.lead strong { font-weight: 700; }
+.assess { border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; background: var(--surface); }
+.assess-row { display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
+.chip { display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); }
+.strength { height: 6px; background: var(--line); border-radius: 3px; overflow: hidden; margin: 8px 0 6px; }
+.strength i { display: block; height: 100%; background: var(--brass); transition: width 0.6s ease; }
+.assess p { margin: 0; font-size: 13px; color: var(--muted); font-style: italic; }
+#timeline { width: 100%; height: 130px; display: block; }
+.tips { display: flex; flex-direction: column; gap: 8px; font-size: 13px; }
+.tip { border-left: 3px solid var(--brass); padding: 4px 10px; background: var(--surface); }
+.tip b { font-family: var(--font-mono); }
+.muted { color: var(--muted); }
+
+@media (max-width: 1100px) {
+  .panes { grid-template-columns: 1fr; }
+  .pane { border-right: none; border-bottom: 1px solid var(--line); }
+  .record { max-height: 420px; }
+  .graph-wrap { min-height: 420px; }
+}
+@media (max-width: 600px) {
+  .masthead, .caption { padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); }
+  .case-title { font-size: 21px; }
+  .proto { display: none; }
+}
+@media (min-width: 1101px) {
+  html, body { height: 100%; }
+  .app { height: 100%; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}
+</style>
+
+<div class="app">
+  <header class="masthead">
+    <div class="brand">
+      <svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M16 4v23M9 27h14M6 9h20M16 6.5l-.01 0"/>
+        <path d="M6 9l-4 9h8l-4-9zM26 9l-4 9h8l-4-9z"/>
+        <path d="M2 18a4 2.4 0 0 0 8 0M22 18a4 2.4 0 0 0 8 0"/>
+      </svg>
+      <div>
+        <div class="brand-name">LegalBAF</div>
+        <div class="brand-sub">Quantitative argumentation for adversarial hearings</div>
+      </div>
+    </div>
+    <div class="spacer"></div>
+    <span class="proto">Prototype · agent responses pre-scripted from the case record</span>
+  </header>
+
+  <section class="caption" aria-label="Case">
+    <div class="caption-main">
+      <div class="eyebrow" id="case-eyebrow">Article 10 · Freedom of expression · HUDOC 001-85085</div>
+      <h1 class="case-title" id="case-title"></h1>
+      <p class="case-summary" id="case-summary"></p>
+    </div>
+    <div class="controls">
+      <label class="hint" for="case-select">Case</label>
+      <select id="case-select" class="select"></select>
+      <button class="btn primary" id="btn-play">Begin hearing</button>
+      <button class="btn" id="btn-step">Next step</button>
+      <button class="btn" id="btn-reset">Reset</button>
+      <select id="speed" class="select" aria-label="Speed">
+        <option value="1">1×</option>
+        <option value="2">2×</option>
+        <option value="4">4×</option>
+      </select>
+      <span class="status"><span class="dot" id="status-dot"></span><span id="status-text">Ready</span></span>
+    </div>
+  </section>
+
+  <main class="panes">
+    <section class="pane" aria-label="Hearing record">
+      <div class="pane-head">
+        <h2 class="pane-title">Hearing record</h2>
+        <span class="pane-note" id="round-note">Round 0</span>
+      </div>
+      <div class="record" id="record" aria-live="polite">
+        <p class="empty" id="record-empty">The prosecution agent opens for the applicant. The defence agent answers for the Government. Each argument is entered into the graph by the agent who raised it.</p>
+      </div>
+      <form class="composer" id="composer">
+        <div class="composer-row">
+          <span class="composer-label">Test your own argument</span>
+          <div class="seg" role="group" aria-label="Argue for">
+            <button type="button" class="pros" id="side-app" aria-pressed="true">Applicant</button>
+            <button type="button" class="def" id="side-gov" aria-pressed="false">Government</button>
+          </div>
+        </div>
+        <textarea id="user-arg" placeholder="Type an argument. The opposing agent will draft a counter-argument and the bench will weigh both."></textarea>
+        <div class="composer-row">
+          <span class="hint">Litigation strategy · see the reply before the hearing</span>
+          <button class="btn primary" id="btn-submit" type="submit">Submit to the court</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="pane graph-pane" aria-label="Argument graph">
+      <div class="pane-head">
+        <h2 class="pane-title">Argument graph</h2>
+        <span class="pane-note">Support edges only · edge weight = strength set by the bench</span>
+      </div>
+      <div class="graph-wrap" id="graph-wrap">
+        <svg id="graph" viewBox="0 0 900 540" role="img" aria-label="Quantitative bipolar argumentation graph"></svg>
+      </div>
+      <div class="legend">
+        <span><i class="sw" style="border-color: var(--pros)"></i>Prosecution agent · Applicant → Violation</span>
+        <span><i class="sw" style="border-color: var(--def)"></i>Defence agent · Government → No violation</span>
+        <span><i class="sw" style="border-color: var(--unweighed); border-top-style: dashed"></i>Entered, awaiting the bench</span>
+      </div>
+    </section>
+
+    <aside class="pane" aria-label="The bench">
+      <div class="pane-head">
+        <h2 class="pane-title">The bench</h2>
+        <span class="pane-note">Judge agent weighs and decides</span>
+      </div>
+      <div class="bench" id="bench">
+        <div>
+          <h3 class="block-title">Balance of the case</h3>
+          <div class="balance">
+            <div class="balance-bar"><span class="p" id="bar-p" style="width:50%"></span><span class="d" id="bar-d" style="width:50%"></span></div>
+            <div class="balance-nums">
+              <div><span class="muted">Violation</span><b id="score-p">0.00</b></div>
+              <div class="r"><span class="muted">No violation</span><b id="score-d">0.00</b></div>
+            </div>
+            <div class="lead" id="lead">No arguments weighed yet.</div>
+          </div>
+        </div>
+        <div>
+          <h3 class="block-title">Latest assessment</h3>
+          <div class="assess" id="assess"><p>The bench assigns each argument a category and a strength from 0 to 1. The parties never set their own weights.</p></div>
+        </div>
+        <div>
+          <h3 class="block-title">Margin over the hearing</h3>
+          <svg id="timeline" viewBox="0 0 300 130" role="img" aria-label="Margin between the two decisions after each assessment"></svg>
+        </div>
+        <div>
+          <h3 class="block-title">Tipping points</h3>
+          <div class="tips" id="tips"><span class="muted">Shown once the hearing closes.</span></div>
+        </div>
+      </div>
+    </aside>
+  </main>
+</div>
+
+<script>
+const CATS = {
+  PUBLIC_INTEREST: 'Public interest',
+  STATUS_OF_PERSON: 'Status of person',
+  PRIOR_CONDUCT: 'Prior conduct',
+  TRUTH_AND_VERIFICATION: 'Truth & verification',
+  CONTENT_AND_FORM: 'Content & form',
+  SEVERITY_OF_SANCTION: 'Severity of sanction',
+  LAWFULNESS_AND_AIM: 'Lawfulness & aim',
+  OTHER: 'Other',
+};
+
+// Arguments, categories, strengths and rationales are the real assessments from data/assessments.
+const CASES = {
+  ivanova: {
+    title: 'Rumyana Ivanova <em>v.</em> Bulgaria',
+    eyebrow: 'Article 10 · Freedom of expression · HUDOC 001-85085',
+    summary: 'A parliamentary reporter for the daily 24 Hours wrote that a candidate for deputy Minister of Finance was on the central bank\'s list of "credit millionaires" through three named companies owing 20.4 million levs. The company details were wrong. She was convicted of defamation; criminal liability was replaced by an administrative fine and damages.',
+    actual: 'no',
+    rounds: [[['A5'], ['G4']], [['A1', 'A2'], ['G7']], [['A6', 'A3'], ['G5']], [['A7', 'A8'], ['G2']], [['A9'], ['G3']], [['A4', 'A10'], ['G1', 'G6']]],
+    args: {
+      A1: ['SEVERITY_OF_SANCTION', 0.5, 'In a democratic society it is not necessary to resort to penal sanctions to curtail freedom of expression; criminal law has an unduly chilling effect, particularly for journalists, who rely on others for information.', 'Relevant under the case-law, though criminal defamation is not incompatible per se, and only a minimum administrative fine was imposed.'],
+      A2: ['SEVERITY_OF_SANCTION', 0.25, 'Criminal liability is problematic because journalists work and verify information in teams, whereas penal sanctions are individual.', 'Abstract critique; little bearing on the proportionality of this particular sanction.'],
+      A3: ['TRUTH_AND_VERIFICATION', 0.25, 'Requiring defendants in defamation proceedings to prove the truth of their statements is disproportionate and leads to de facto no-fault liability.', 'Defendants may be required to prove factual statements, so this argument is weak.'],
+      A4: ['TRUTH_AND_VERIFICATION', 0.4, 'The courts never considered how far the allegations actually affected Mr M. D.\'s reputation; they held him defamed because of a simple mistake in company names.', 'Contestable: the domestic courts found the false specifics were the core of the defamation.'],
+      A5: ['PUBLIC_INTEREST', 0.6, 'The article informed the public about the candidates for deputy Minister of Finance. Information on that topic mattered more than the identity of the company through which he featured on the list.', 'A candidate for deputy finance minister and the credit-millionaires issue are clearly matters of public interest.'],
+      A6: ['TRUTH_AND_VERIFICATION', 0.4, 'Only the company names were wrong. Mr M. D. was in fact a "credit millionaire" through Vitaplant OOD, and the error was induced by the MPs who tipped her off.', 'Some factual basis, but the courts found the Vitaplant link indirect and the three named companies false.'],
+      A7: ['TRUTH_AND_VERIFICATION', 0.3, 'The claim that she never consulted the BNB list conflicts with the court\'s own finding that Mr M. D. featured on it through Vitaplant OOD.', 'Proving a link after the fact does not show she consulted the list before publishing.'],
+      A8: ['TRUTH_AND_VERIFICATION', 0.4, 'Requiring her to check the register of companies was excessive; no such duty existed and the check was unfeasible in the time available.', 'The register was public and she had time to check it; only partly persuasive.'],
+      A9: ['TRUTH_AND_VERIFICATION', 0.2, 'The courts should have called the MPs she spoke to, who tricked her into publishing inaccurate information.', 'Speculative; she herself refused to name the MP.'],
+      A10: ['TRUTH_AND_VERIFICATION', 0.3, 'Mr M. D. suffered no real prejudice: through Vitaplant OOD he took out loans and failed to repay them, as his own contracts show.', 'The courts found no direct, substantial link, which weakens the argument.'],
+      G1: ['TRUTH_AND_VERIFICATION', 0.65, 'The key question is whether the journalist fulfilled her duty to ensure accuracy. The public was misled because the information was untrue.', 'Correctly invokes the duty to act in good faith and provide accurate information.'],
+      G2: ['TRUTH_AND_VERIFICATION', 0.65, 'She neither consulted the official BNB list nor checked the register of companies, and trusted unofficial sources without verification.', 'She cited an official document she had not seen; a fair point on inadequate verification.'],
+      G3: ['TRUTH_AND_VERIFICATION', 0.65, 'She failed to carry out a proper journalistic enquiry. Specific but untrue details created a false impression of verified, official information.', 'The false precise details gave a misleading appearance of an official source; a strong point.'],
+      G4: ['TRUTH_AND_VERIFICATION', 0.6, 'The statement was negative, led to grave public disapproval, and was presented as fact. It therefore required serious proof.', 'A serious factual allegation requires a sufficient factual basis.'],
+      G5: ['TRUTH_AND_VERIFICATION', 0.55, 'Both domestic courts allowed evidence on the truth of the allegation, found it untrue, and gave ample reasons.', 'Supports the procedural fairness of the defamation proceedings.'],
+      G6: ['LAWFULNESS_AND_AIM', 0.4, 'The remedy used, a private criminal complaint with a civil claim, was ordinary and open to anyone whose reputation is attacked.', 'Prescribed by law and pursued a legitimate aim; little weight on proportionality.'],
+      G7: ['SEVERITY_OF_SANCTION', 0.6, 'The courts waived criminal liability and imposed only an administrative punishment; the damages were not unreasonable.', 'A minimum fine and moderate damages weigh in favour of proportionality.'],
+    },
+    demoArg: 'Ms Ivanova acted in good faith: she relied on Members of Parliament, the customs press officer and a published list of debtors, and the article was corrected the same day.',
+  },
+  ziembinski: {
+    title: 'Ziembiński <em>v.</em> Poland (No. 2)',
+    eyebrow: 'Article 10 · Freedom of expression · HUDOC 001-164453',
+    summary: 'The editor of a local weekly published "Elegantly wrapped dung", mocking district officials who promoted a quail farm as a cure for rural unemployment and calling them a "numbskull" and a "poser". He was convicted of insult and fined PLN 10,000.',
+    actual: 'violation',
+    rounds: [[['A3'], ['G1']], [['A6', 'A7'], ['G3']], [['A4', 'A5'], ['G2']], [['A8', 'A9'], ['G4', 'G6']], [['A1', 'A2'], ['G5']]],
+    args: {
+      A1: ['OTHER', 0.2, 'He harmed no one\'s good name; he did not even give the initials of the district officials.', 'The officials were easily identifiable from the context.'],
+      A2: ['TRUTH_AND_VERIFICATION', 0.25, 'He respected the accuracy standards of the Press Act, so he should not be liable for insult.', 'The conviction was for value-laden epithets, not false facts.'],
+      A3: ['PUBLIC_INTEREST', 0.8, 'He reported on local officials appropriating the quail-farm project; the media must be free to criticise local government.', 'Criticism of a local unemployment initiative is clearly a matter of public interest.'],
+      A4: ['CONTENT_AND_FORM', 0.45, 'He insulted no one: he named no person and criticised only methods and populist conduct.', 'Partly plausible, but the courts found personal targeting.'],
+      A5: ['CONTENT_AND_FORM', 0.2, 'Dictionaries do not list the words used as insults.', 'Context, not the dictionary, decides offensiveness.'],
+      A6: ['STATUS_OF_PERSON', 0.7, 'Public figures must accept the risk of more severe criticism.', 'A district mayor and officials acting in a public capacity face wider limits of criticism.'],
+      A7: ['CONTENT_AND_FORM', 0.7, 'Journalistic criticism need not be free of emotion; newspapers are not government bulletins.', 'Press freedom covers a degree of exaggeration and provocation.'],
+      A8: ['SEVERITY_OF_SANCTION', 0.65, 'The punishment was disproportionate and led to the economic downfall of the newspaper.', 'A substantial criminal fine for a small weekly has a chilling effect.'],
+      A9: ['SEVERITY_OF_SANCTION', 0.6, 'The limits of acceptable criticism should have been set through civil, not criminal, law.', 'The Court favours restraint in using criminal proceedings against the press.'],
+      G1: ['LAWFULNESS_AND_AIM', 0.6, 'The interference was prescribed by Article 216 of the Criminal Code and protected the reputation of others.', 'Undisputed, but it does not settle necessity.'],
+      G2: ['OTHER', 0.3, 'The domestic courts gave relevant and sufficient reasons for finding the statements insulting.', 'The courts did not properly weigh the public-interest context.'],
+      G3: ['CONTENT_AND_FORM', 0.4, 'The applicant overstepped the limits of acceptable criticism.', 'Crude language, but arguably within permissible exaggeration.'],
+      G4: ['SEVERITY_OF_SANCTION', 0.35, 'The fine was set in the light of his finances and was the most lenient penalty available.', 'Still a criminal conviction with a considerable sum.'],
+      G5: ['OTHER', 0.3, 'Individual dignity must also be protected, and criminal-law protection of reputation is constitutional.', 'Does not address proportionality on these facts.'],
+      G6: ['SEVERITY_OF_SANCTION', 0.15, 'The proceedings were brought by private individuals, not by a public prosecutor.', 'Does not change the criminal nature of the sanction.'],
+    },
+    demoArg: 'The article was satire on a public policy, written in the style of a local weekly; the officials were criticised for their project, not attacked as private persons.',
+  },
+};
+
+// Pre-scripted replies for the litigation-strategy box: [category, keywords, counter for applicant arg, counter for government arg]
+const STRATEGY = [
+  ['TRUTH_AND_VERIFICATION', /good faith|verif|source|true|accura|fact|check|list|evidence|correct/i,
+    'Good faith requires checking a specific factual allegation against the primary source before publication. Correcting later copies does not undo naming specific companies and a precise debt figure.',
+    'The essential facts had a sufficient basis, and the journalist took reasonable steps to verify them before publication.'],
+  ['SEVERITY_OF_SANCTION', /fine|criminal|sanction|penal|chilling|prison|damages|punish/i,
+    'The sanction was the most lenient available and was proportionate; a modest penalty does not deter legitimate journalism.',
+    'Any criminal conviction of a journalist carries a chilling effect, however modest the penalty.'],
+  ['PUBLIC_INTEREST', /public|debate|politic|candidate|minister|policy|government|voters/i,
+    'A public-interest topic does not license publishing specific false allegations about an identifiable person.',
+    'The publication concerned the conduct of public authorities, a matter of the highest public interest that leaves little room for restriction.'],
+  ['STATUS_OF_PERSON', /official|mayor|politician|public figure|mp\b|member of parliament/i,
+    'Civil servants do not lay themselves open to scrutiny to the same extent as politicians, and remain entitled to protection of their reputation.',
+    'Officials acting in a public capacity must tolerate wider limits of criticism than private individuals.'],
+  ['CONTENT_AND_FORM', /satire|tone|insult|word|exaggerat|offensive|style|emotion/i,
+    'Gratuitous personal insults go beyond satire and add nothing to the public debate.',
+    'Provocation and exaggeration are part of journalistic freedom, especially in satire.'],
+  ['LAWFULNESS_AND_AIM', /law|legitimate|prescribed|statute|code/i,
+    'The interference had a clear statutory basis and pursued the legitimate aim of protecting reputation.',
+    'A statutory basis alone does not show that the interference was necessary in a democratic society.'],
+  ['OTHER', /.*/,
+    'The argument does not address the necessity of the interference on the facts of this case.',
+    'The Government\'s position does not answer the core of the applicant\'s complaint.'],
+];
+
+const $ = id => document.getElementById(id);
+const sideOf = id => id[0] === 'A' || id[0] === 'P' || id.startsWith('U-A') ? 'app' : 'gov';
+
+let S;          // hearing state
+let timer = null;
+let playing = false;
+let userSide = 'app';
+let demoMode = false;
+
+function speed() { return Number($('speed').value) || 1; }
+function wait(ms) { return new Promise(r => { timer = setTimeout(r, ms / speed()); }); }
+
+function initCase(key) {
+  const c = CASES[key];
+  S = { key, c, nodes: [], weighed: {}, history: [], round: 0, steps: [], pos: 0, done: false, busy: false, lastLead: null, nextIdx: { A: 0, G: 0 } };
+  for (const id of Object.keys(c.args)) {
+    const n = Number(id.slice(1));
+    if (id[0] === 'A') S.nextIdx.A = Math.max(S.nextIdx.A, n);
+    else S.nextIdx.G = Math.max(S.nextIdx.G, n);
+  }
+  c.rounds.forEach((round, r) => {
+    S.steps.push({ type: 'round', n: r + 1 });
+    round.forEach(move => move.forEach(id => {
+      S.steps.push({ type: 'present', id });
+      S.steps.push({ type: 'weigh', id });
+    }));
+  });
+  $('case-title').innerHTML = c.title;
+  $('case-eyebrow').textContent = c.eyebrow;
+  $('case-summary').textContent = c.summary;
+  $('record').innerHTML = '';
+  const empty = document.createElement('p');
+  empty.className = 'empty';
+  empty.textContent = 'The prosecution agent opens for the applicant. The defence agent answers for the Government. Each argument is entered into the graph by the agent who raised it.';
+  $('record').appendChild(empty);
+  $('round-note').textContent = 'Round 0';
+  $('assess').innerHTML = '<p>The bench assigns each argument a category and a strength from 0 to 1. The parties never set their own weights.</p>';
+  $('tips').innerHTML = '<span class="muted">Shown once the hearing closes.</span>';
+  $('user-arg').value = '';
+  setStatus('Ready', '');
+  $('btn-play').textContent = 'Begin hearing';
+  renderAll();
+}
+
+function setStatus(text, cls) {
+  $('status-text').textContent = text;
+  $('status-dot').className = 'dot ' + cls;
+}
+
+function scores() {
+  let p = 0, d = 0;
+  for (const n of S.nodes) {
+    const w = S.weighed[n.id];
+    if (w == null) continue;
+    if (n.side === 'app') p += w; else d += w;
+  }
+  return { p: round2(p), d: round2(d) };
+}
+const round2 = x => Math.round(x * 100) / 100;
+const fmt = x => x.toFixed(2);
+
+function leader(sc) {
+  if (Math.abs(sc.p - sc.d) < 1e-9) return null;
+  return sc.p > sc.d ? 'violation' : 'no';
+}
+const decisionName = l => l === 'violation' ? 'Violation of Article 10' : 'No violation of Article 10';
+const decisionPhrase = l => l === 'violation' ? 'a violation' : 'no violation';
+
+// ---------- rendering ----------
+function renderAll(enterId) {
+  renderGraph(enterId);
+  renderBalance();
+  renderTimeline();
+}
+
+function bezierPoint(p0, p1, p2, p3, t) {
+  const u = 1 - t;
+  return u * u * u * p0 + 3 * u * u * t * p1 + 3 * u * t * t * p2 + t * t * t * p3;
+}
+
+function renderGraph(enterId) {
+  const W = 900, H = 540, cy = H / 2;
+  const dec = { violation: { x: 335, y: cy }, no: { x: 565, y: cy } };
+  const left = S.nodes.filter(n => n.side === 'app');
+  const right = S.nodes.filter(n => n.side === 'gov');
+  const place = (list, x) => list.forEach((n, i) => {
+    const gap = Math.min(52, (H - 90) / Math.max(1, list.length - 1));
+    const total = gap * (list.length - 1);
+    n.x = x; n.y = cy + 6 - total / 2 + i * gap;
+  });
+  place(left, 70);
+  place(right, 830);
+  const sc = scores();
+  const lead = leader(sc);
+  let edges = '', nodes = '', labels = '';
+  for (const n of S.nodes) {
+    const target = n.side === 'app' ? dec.violation : dec.no;
+    const tx = n.side === 'app' ? target.x - 78 : target.x + 78;
+    const c1 = n.x + (tx - n.x) * 0.5, c2 = n.x + (tx - n.x) * 0.5;
+    const w = S.weighed[n.id];
+    const color = n.side === 'app' ? 'var(--pros)' : 'var(--def)';
+    const d = `M ${n.x} ${n.y} C ${c1} ${n.y}, ${c2} ${target.y}, ${tx} ${target.y}`;
+    if (w == null) {
+      edges += `<path class="edge unweighed" d="${d}"/>`;
+    } else {
+      edges += `<path class="edge" d="${d}" stroke="${color}" stroke-opacity="0.75" stroke-width="${(1 + w * 7).toFixed(2)}"/>`;
+      const mx = bezierPoint(n.x, c1, c2, tx, 0.42), my = bezierPoint(n.y, n.y, target.y, target.y, 0.42);
+      labels += `<g><rect x="${mx - 17}" y="${my - 10}" width="34" height="18" rx="3" fill="var(--surface)" stroke="var(--line)"/><text x="${mx}" y="${my + 3.5}" text-anchor="middle" font-family="var(--font-mono)" font-size="11" fill="var(--ink)">${fmt(w)}</text></g>`;
+    }
+    const isUser = n.user;
+    nodes += `<g class="node-arg${n.id === enterId ? ' enter' : ''}" data-id="${n.id}" tabindex="0" role="button" aria-label="${n.id}">
+      <title>${n.id}: ${escapeHtml(n.text)}</title>
+      <circle cx="${n.x}" cy="${n.y}" r="19" fill="var(--surface)" stroke="${color}" stroke-width="${isUser ? 3.5 : 2}" ${isUser ? 'stroke-dasharray="3 2"' : ''}/>
+      <text x="${n.x}" y="${n.y + 4}" text-anchor="middle" font-family="var(--font-mono)" font-weight="600" font-size="12" fill="${color}">${n.id}</text>
+    </g>`;
+  }
+  const decBox = (key, label, sub, score, color) => {
+    const p = dec[key];
+    const on = lead === key;
+    return `<g>
+      <rect x="${p.x - 78}" y="${p.y - 52}" width="156" height="104" rx="4" fill="var(--surface)" stroke="${on ? 'var(--brass)' : color}" stroke-width="${on ? 3 : 1.5}"/>
+      ${on ? `<rect x="${p.x - 78}" y="${p.y - 52}" width="156" height="6" fill="var(--brass)"/>` : ''}
+      <text x="${p.x}" y="${p.y - 24}" text-anchor="middle" font-family="var(--font-body)" font-weight="700" font-size="12" letter-spacing="1.5" fill="${color}">${label}</text>
+      <text x="${p.x}" y="${p.y - 8}" text-anchor="middle" font-family="var(--font-body)" font-size="11" fill="var(--muted)">${sub}</text>
+      <text x="${p.x}" y="${p.y + 28}" text-anchor="middle" font-family="var(--font-mono)" font-weight="600" font-size="26" fill="var(--ink)">${fmt(key === 'violation' ? sc.p : sc.d)}</text>
+    </g>`;
+  };
+  const header = `
+    <text x="70" y="14" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--pros)">PROSECUTION</text>
+    <text x="830" y="14" text-anchor="middle" font-family="var(--font-body)" font-size="11" font-weight="700" letter-spacing="1.2" fill="var(--def)">DEFENCE</text>
+    <text x="450" y="${cy + 92}" text-anchor="middle" font-family="var(--font-display)" font-size="13" fill="var(--muted)">Decision nodes</text>`;
+  $('graph').innerHTML = header + edges + labels +
+    decBox('violation', 'VIOLATION', 'of Article 10', 0, 'var(--pros)') +
+    decBox('no', 'NO VIOLATION', 'of Article 10', 0, 'var(--def)') + nodes;
+  $('graph').querySelectorAll('.node-arg').forEach(g => {
+    const go = () => focusEntry(g.dataset.id);
+    g.addEventListener('click', go);
+    g.addEventListener('keydown', e => { if (e.key === 'Enter') go(); });
+  });
+  const old = $('graph-wrap').querySelector('.verdict');
+  if (old && !S.done) old.remove();
+}
+
+function renderBalance() {
+  const sc = scores();
+  const total = sc.p + sc.d;
+  const pp = total ? (sc.p / total) * 100 : 50;
+  $('bar-p').style.width = pp + '%';
+  $('bar-d').style.width = (100 - pp) + '%';
+  $('score-p').textContent = fmt(sc.p);
+  $('score-d').textContent = fmt(sc.d);
+  const l = leader(sc);
+  if (!S.history.length) $('lead').textContent = 'No arguments weighed yet.';
+  else if (!l) $('lead').innerHTML = '<strong>Undecided.</strong> The two decisions are level.';
+  else $('lead').innerHTML = `<strong>${decisionName(l)}</strong> leads by <span class="mono">${fmt(Math.abs(sc.p - sc.d))}</span>.`;
+}
+
+function renderTimeline() {
+  const svg = $('timeline');
+  const W = 300, H = 130, pad = 8, mid = H / 2;
+  const h = S.history;
+  const maxAbs = Math.max(1, ...h.map(x => Math.abs(x.m)));
+  const xs = i => pad + (h.length <= 1 ? 0 : (i * (W - 2 * pad)) / (h.length - 1));
+  const ys = m => mid - (m / maxAbs) * (mid - 14);
+  let out = `<text x="${pad}" y="11" font-size="10" font-family="var(--font-body)" fill="var(--pros)">Violation ahead</text>
+    <text x="${pad}" y="${H - 3}" font-size="10" font-family="var(--font-body)" fill="var(--def)">No violation ahead</text>
+    <line x1="${pad}" x2="${W - pad}" y1="${mid}" y2="${mid}" stroke="var(--line)" stroke-dasharray="3 3"/>`;
+  if (h.length) {
+    const pts = h.map((x, i) => `${xs(i)},${ys(x.m)}`).join(' ');
+    out += `<polyline points="${pts}" fill="none" stroke="var(--ink)" stroke-width="1.6"/>`;
+    h.forEach((x, i) => {
+      if (x.flip) out += `<circle cx="${xs(i)}" cy="${ys(x.m)}" r="${x.decisive ? 5 : 3}" fill="${x.decisive ? 'var(--brass)' : 'var(--surface)'}" stroke="var(--brass)" stroke-width="1.5"/>`;
+    });
+    const last = h[h.length - 1];
+    out += `<circle cx="${xs(h.length - 1)}" cy="${ys(last.m)}" r="3.5" fill="var(--ink)"/>`;
+    const dec = h.find(x => x.decisive);
+    if (dec) {
+      const i = h.indexOf(dec);
+      const tx = Math.min(W - 60, Math.max(40, xs(i)));
+      out += `<text x="${tx}" y="${ys(dec.m) - 9 < 22 ? ys(dec.m) + 17 : ys(dec.m) - 9}" text-anchor="middle" font-size="10" font-weight="700" font-family="var(--font-body)" fill="var(--brass)">Tipping point · ${dec.id}</text>`;
+    }
+  }
+  svg.innerHTML = out;
+}
+
+function escapeHtml(s) {
+  return s.replace(/[&<>"]/g, ch => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[ch]));
+}
+
+function addEntry(cls, head, idText, body) {
+  const empty = $('record').querySelector('.empty');
+  if (empty) empty.remove();
+  const el = document.createElement('div');
+  el.className = 'entry ' + cls;
+  el.innerHTML = `<div class="entry-head">${head}${idText ? ` <span class="entry-id">${idText}</span>` : ''}</div>` +
+    (body == null ? '<div class="typing" aria-label="drafting"><i></i><i></i><i></i></div>' : `<p class="entry-text">${body}</p>`);
+  if (idText) el.dataset.id = idText;
+  $('record').appendChild(el);
+  $('record').scrollTop = $('record').scrollHeight;
+  return el;
+}
+
+function focusEntry(id) {
+  const el = $('record').querySelector(`.entry[data-id="${id}"]`);
+  if (!el) return;
+  el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+  el.classList.add('flash');
+  setTimeout(() => el.classList.remove('flash'), 1400);
+}
+
+const partyHead = (side, user) => user
+  ? (side === 'app' ? 'Your argument · Applicant' : 'Your argument · Government')
+  : (side === 'app' ? 'Prosecution agent · Applicant' : 'Defence agent · Government');
+
+// ---------- steps ----------
+async function present(id, text, side, user = false) {
+  const el = addEntry(side === 'app' ? 'pros' : 'def', partyHead(side, user), id, user ? escapeHtml(text) : null);
+  if (user) el.classList.add('user');
+  setStatus(user ? 'Your argument entered' : (side === 'app' ? 'Prosecution agent is drafting…' : 'Defence agent is drafting…'), 'live');
+  if (!user) {
+    await wait(1100);
+    el.querySelector('.typing').outerHTML = `<p class="entry-text">${escapeHtml(text)}</p>`;
+    $('record').scrollTop = $('record').scrollHeight;
+  }
+  S.nodes.push({ id, text, side, user });
+  renderAll(id);
+  setStatus('Argument entered · edge awaiting the bench', 'live');
+  await wait(650);
+}
+
+async function weigh(id, cat, strength, why) {
+  setStatus('The bench is weighing ' + id + '…', 'live');
+  await wait(500);
+  S.weighed[id] = strength;
+  const sc = scores();
+  const l = leader(sc);
+  const flip = S.history.length > 0 && l && l !== S.lastLead;
+  if (l) S.lastLead = l;
+  S.history.push({ id, m: round2(sc.p - sc.d), flip: flip || (S.history.length === 0 && !!l) });
+  markDecisive();
+  addEntry('ruling', 'Bench', id, `${CATS[cat]} · strength <span class="mono">${fmt(strength)}</span> — ${escapeHtml(why)}`);
+  $('assess').innerHTML = `<div class="assess-row"><span class="mono">${id}</span><span class="chip">${CATS[cat]}</span></div>
+    <div class="strength"><i style="width:${strength * 100}%"></i></div>
+    <div class="assess-row" style="margin-bottom:6px"><span class="muted">Strength</span><span class="mono">${fmt(strength)}</span></div>
+    <p>${escapeHtml(why)}</p>`;
+  renderAll();
+  S.cats = S.cats || {};
+  S.cats[id] = cat;
+  if (flip && S.history.length > 1) setStatus(`Lead changed: ${decisionName(l)}`, 'live');
+  await wait(700);
+}
+
+function markDecisive() {
+  S.history.forEach(x => x.decisive = false);
+  for (let i = S.history.length - 1; i >= 0; i--) {
+    if (S.history[i].flip) { S.history[i].decisive = true; break; }
+  }
+}
+
+async function runStep(step) {
+  const c = S.c;
+  if (step.type === 'round') {
+    S.round = step.n;
+    $('round-note').textContent = `Round ${step.n} of ${c.rounds.length}`;
+    const m = document.createElement('div');
+    m.className = 'round-mark';
+    m.textContent = `Round ${step.n}`;
+    const empty = $('record').querySelector('.empty');
+    if (empty) empty.remove();
+    $('record').appendChild(m);
+    await wait(400);
+  } else if (step.type === 'present') {
+    const a = c.args[step.id];
+    await present(step.id, a[2], sideOf(step.id));
+  } else {
+    const a = c.args[step.id];
+    await weigh(step.id, a[0], a[1], a[3]);
+  }
+}
+
+async function play() {
+  if (S.busy) return;
+  playing = true;
+  $('btn-play').textContent = 'Pause';
+  while (playing && S.pos < S.steps.length) {
+    S.busy = true;
+    await runStep(S.steps[S.pos++]);
+    S.busy = false;
+  }
+  if (S.pos >= S.steps.length && !S.done) await closeHearing();
+  playing = false;
+  $('btn-play').textContent = S.done ? 'Hearing closed' : 'Resume';
+}
+
+async function stepOnce() {
+  if (S.busy || playing || S.done) return;
+  if (S.pos < S.steps.length) {
+    S.busy = true;
+    await runStep(S.steps[S.pos++]);
+    S.busy = false;
+  }
+  if (S.pos >= S.steps.length && !S.done) await closeHearing();
+  setStatus(S.done ? 'Hearing closed' : 'Paused', S.done ? 'done' : '');
+}
+
+async function closeHearing() {
+  S.done = true;
+  renderVerdict();
+  renderTips();
+  setStatus('Hearing closed · judgment delivered', 'done');
+  $('btn-play').textContent = 'Hearing closed';
+  $('btn-play').disabled = true;
+  $('round-note').textContent = 'Closed';
+  $('bench').scrollTo({ top: 99999, behavior: 'smooth' });
+}
+
+function renderVerdict() {
+  const sc = scores();
+  const l = leader(sc);
+  const actual = S.c.actual;
+  const match = l === actual;
+  let v = $('graph-wrap').querySelector('.verdict');
+  if (!v) { v = document.createElement('div'); v.className = 'verdict'; $('graph-wrap').appendChild(v); }
+  v.innerHTML = `<div class="verdict-k">Judgment of the simulated court</div>
+    <div class="verdict-v">${l ? decisionName(l) : 'Undecided'}</div>
+    <div class="verdict-s"><span class="mono">${fmt(sc.p)}</span> violation · <span class="mono">${fmt(sc.d)}</span> no violation<br>
+    Strasbourg Court's actual judgment: <strong>${decisionName(actual)}</strong> ${match ? '✓' : '✗'}</div>`;
+}
+
+function renderTips() {
+  const sc = scores();
+  const l = leader(sc);
+  if (!l) { $('tips').innerHTML = '<span class="muted">The case is level; any new argument decides it.</span>'; return; }
+  const margin = Math.abs(sc.p - sc.d);
+  const leadSide = l === 'violation' ? 'app' : 'gov';
+  const other = l === 'violation' ? 'no' : 'violation';
+  const tips = [];
+  const dec = S.history.find(x => x.decisive);
+  if (dec) tips.push(`<div class="tip">Decisive moment: <b>${dec.id}</b> put <strong>${decisionPhrase(l)}</strong> ahead for good.</div>`);
+  const removable = S.nodes.filter(n => n.side === leadSide && S.weighed[n.id] > margin + 1e-9)
+    .sort((a, b) => S.weighed[b.id] - S.weighed[a.id]).map(n => n.id);
+  if (removable.length) tips.push(`<div class="tip">Rebutting any one of <b>${removable.slice(0, 6).join(', ')}</b>${removable.length > 6 ? ' …' : ''} reverses the judgment.</div>`);
+  tips.push(`<div class="tip">A new ${leadSide === 'app' ? 'Government' : 'Applicant'} argument stronger than <b>${fmt(margin)}</b> reverses the judgment.</div>`);
+  const per = {};
+  for (const n of S.nodes) {
+    const cat = S.cats[n.id];
+    per[cat] = per[cat] || { p: 0, d: 0 };
+    if (n.side === 'app') per[cat].p += S.weighed[n.id]; else per[cat].d += S.weighed[n.id];
+  }
+  for (const [cat, v] of Object.entries(per)) {
+    const diff = v.p - v.d;
+    if (Math.abs(diff) < 1e-9) continue;
+    const t = ((sc.d - v.d) - (sc.p - v.p)) / diff;
+    if (t > 0.02 && t < 0.98) tips.push(`<div class="tip">Weight θ of <strong>${CATS[cat]}</strong> below <b>${fmt(t)}</b> gives ${decisionPhrase(other)}.</div>`);
+    else if (t > 1.02 && t <= 3) tips.push(`<div class="tip">Weight θ of <strong>${CATS[cat]}</strong> above <b>${fmt(t)}</b> gives ${decisionPhrase(other)}.</div>`);
+  }
+  $('tips').innerHTML = tips.join('');
+}
+
+// ---------- litigation strategy ----------
+function classify(text) {
+  for (const row of STRATEGY) if (row[1].test(text)) return row;
+  return STRATEGY[STRATEGY.length - 1];
+}
+
+async function submitUserArg(text) {
+  if (S.busy || playing) return;
+  text = text.trim();
+  if (!text) { $('user-arg').focus(); return; }
+  S.busy = true;
+  $('btn-submit').disabled = true;
+  const side = userSide;
+  const prefix = side === 'app' ? 'A' : 'G';
+  const id = prefix + (++S.nextIdx[prefix]);
+  const row = classify(text);
+  const m = document.createElement('div');
+  m.className = 'round-mark';
+  m.textContent = 'Litigation strategy';
+  $('record').appendChild(m);
+  await present(id, text, side, true);
+  await weigh(id, row[0], 0.45, 'Assessed on the facts of this case; relevant but contestable.');
+  const cSide = side === 'app' ? 'gov' : 'app';
+  const cPrefix = cSide === 'app' ? 'A' : 'G';
+  const cid = cPrefix + (++S.nextIdx[cPrefix]);
+  await present(cid, side === 'app' ? row[2] : row[3], cSide);
+  await weigh(cid, row[0], 0.55, 'Answers the point directly and is consistent with the case-law.');
+  if (S.done) { renderVerdict(); renderTips(); $('bench').scrollTo({ top: 99999, behavior: 'smooth' }); setStatus('Hearing closed · judgment updated', 'done'); }
+  else setStatus('Paused', '');
+  $('user-arg').value = '';
+  $('btn-submit').disabled = false;
+  S.busy = false;
+}
+
+// ---------- full demo (for the recording) ----------
+async function typeInto(el, text) {
+  el.focus();
+  for (const ch of text) {
+    el.value += ch;
+    await new Promise(r => setTimeout(r, 22 / speed()));
+  }
+}
+
+async function runDemo() {
+  demoMode = true;
+  await wait(1200);
+  await play();
+  await wait(3200);
+  $('user-arg').scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  setSide('app');
+  await wait(500);
+  await typeInto($('user-arg'), S.c.demoArg);
+  await wait(700);
+  await submitUserArg($('user-arg').value);
+  setStatus('Demo complete', 'done');
+  document.body.dataset.demoDone = '1';
+}
+
+// ---------- wiring ----------
+function setSide(s) {
+  userSide = s;
+  $('side-app').setAttribute('aria-pressed', String(s === 'app'));
+  $('side-gov').setAttribute('aria-pressed', String(s === 'gov'));
+}
+
+function reset() {
+  playing = false;
+  clearTimeout(timer);
+  S.busy = false;
+  $('btn-play').disabled = false;
+  $('btn-submit').disabled = false;
+  const v = $('graph-wrap').querySelector('.verdict');
+  if (v) v.remove();
+  initCase($('case-select').value);
+}
+
+for (const [key, c] of Object.entries(CASES)) {
+  const o = document.createElement('option');
+  o.value = key;
+  o.textContent = c.title.replace(/<[^>]+>/g, '');
+  $('case-select').appendChild(o);
+}
+$('case-select').addEventListener('change', reset);
+$('btn-reset').addEventListener('click', reset);
+$('btn-play').addEventListener('click', () => {
+  if (playing) { playing = false; $('btn-play').textContent = 'Resume'; setStatus('Paused', ''); }
+  else play();
+});
+$('btn-step').addEventListener('click', stepOnce);
+$('side-app').addEventListener('click', () => setSide('app'));
+$('side-gov').addEventListener('click', () => setSide('gov'));
+$('composer').addEventListener('submit', e => { e.preventDefault(); submitUserArg($('user-arg').value); });
+
+initCase('ivanova');
+if (location.hash === '#demo') runDemo();
+</script>

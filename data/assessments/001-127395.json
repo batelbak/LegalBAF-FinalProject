@@ -1,0 +1,199 @@
+[ {
+  "argument" : {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "The conviction interfered with their freedom of expression and, although the interference had a basis in domestic law, it was not necessary in a democratic society."
+  },
+  "category" : "LAWFULNESS_AND_AIM",
+  "strength" : 0.5,
+  "rationale" : "Framing argument conceding lawfulness and contesting necessity; relevant but general."
+}, {
+  "argument" : {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "It was not only the right but also the duty of the media towards citizens to disclose a problem of public interest such as the lack of cooperation between the police and the tax authorities."
+  },
+  "category" : "PUBLIC_INTEREST",
+  "strength" : 0.8,
+  "rationale" : "Press watchdog role on inter-authority cooperation in a major economic crime investigation is a matter of clear public interest, strongly protected by the Court."
+}, {
+  "argument" : {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "The programme discussed two separate cases which had both attracted considerable publicity, and it was unusual that the tax authorities had declined the police's request to conduct a tax inspection in those cases; the programme revealed this issue."
+  },
+  "category" : "PUBLIC_INTEREST",
+  "strength" : 0.7,
+  "rationale" : "The programme revealed an unusual refusal of cooperation in highly publicised cases, strengthening its contribution to public debate."
+}, {
+  "argument" : {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "It was undisputed that the information in the programme was true and correct."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.8,
+  "rationale" : "The District Court itself found nothing false in the information as such, which weighs heavily against a conviction for false insinuation."
+}, {
+  "argument" : {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "The applicants had learned of the issue from the police themselves, a source they considered reliable; they acted in good faith and had no intention to defame."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.6,
+  "rationale" : "Reliance on police sources and good faith is relevant to responsible journalism, though asserted without detail."
+}, {
+  "argument" : {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "The national courts accepted that the programme contained no allegation that K.U. was guilty of a crime, yet reached the erroneous conclusion that it contained a deliberate insinuation that he had invested funds to the detriment of his creditors."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.65,
+  "rationale" : "Points out tension between no direct allegation and a finding of insinuation; the programme accurately said the police wanted to know, making the conviction contestable."
+}, {
+  "argument" : {
+    "id" : "A7",
+    "side" : "applicant",
+    "text" : "It would not have been possible to criticise the tax authorities' conduct without introducing the two separate but linked cases, since it was precisely in those cases that cooperation between the authorities had failed."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.75,
+  "rationale" : "Mentioning K.U. was intrinsically linked to the story since the cooperation failure occurred in his case; this undermines the domestic court's reasoning."
+}, {
+  "argument" : {
+    "id" : "A8",
+    "side" : "applicant",
+    "text" : "After receiving new information about the financing of the sports centre, the applicants duly included it in the rebroadcast of the programme."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.6,
+  "rationale" : "Prompt inclusion of the business partner's account and a follow-up programme shows good faith and balance."
+}, {
+  "argument" : {
+    "id" : "A9",
+    "side" : "applicant",
+    "text" : "The domestic courts failed to strike a proper balance between the competing interests."
+  },
+  "category" : "OTHER",
+  "strength" : 0.55,
+  "rationale" : "General claim about inadequate balancing; the domestic courts' terse reasoning on Article 10 lends it some weight."
+}, {
+  "argument" : {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "The applicants' conviction, the fines, and the obligation to pay costs and damages to K.U. constituted an interference with their freedom of expression."
+  },
+  "category" : "LAWFULNESS_AND_AIM",
+  "strength" : 0.3,
+  "rationale" : "Concession of interference; uncontested but not decisive."
+}, {
+  "argument" : {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "The interference had a basis in Finnish law, in particular Chapter 24, section 9 of the Penal Code, and pursued the legitimate aim of protecting the private life of others."
+  },
+  "category" : "LAWFULNESS_AND_AIM",
+  "strength" : 0.55,
+  "rationale" : "Basis in the Penal Code and protection of reputation are not disputed."
+}, {
+  "argument" : {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "Although the programme's general subject-matter, cooperation problems between the police and tax authorities, was a matter of public interest, the applicants were convicted not for raising that issue but for indirectly alleging that K.U. was guilty of an offence, which amounted to defamation."
+  },
+  "category" : "PUBLIC_INTEREST",
+  "strength" : 0.45,
+  "rationale" : "Distinguishes the general topic from the insinuation, but the insinuation was derived from accurate facts and was integral to the subject."
+}, {
+  "argument" : {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "A large number of people saw the programme; although the applicants could have been convicted of aggravated defamation on that account, the District Court did not find the offence aggravated as a whole."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.35,
+  "rationale" : "Wide audience and non-aggravated finding are relevant to proportionality, but a criminal conviction remains."
+}, {
+  "argument" : {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "The addition made to the rebroadcast stating that the money came from an insurance company did not make good the false insinuation made in the first broadcast."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.35,
+  "rationale" : "The addition arguably mitigated rather than failed; since the original statement was true, there was little to cure."
+}, {
+  "argument" : {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The applicants ignored K.U.'s request to remove the parts concerning him and continued making an indirect allegation."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.3,
+  "rationale" : "Refusal to remove references is weak, since the press need not yield to the subject's demands, and the rebroadcast added his side."
+}, {
+  "argument" : {
+    "id" : "G7",
+    "side" : "government",
+    "text" : "The applicants did not verify the facts before the first broadcast or between the two broadcasts, although they had the possibility to do so."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.4,
+  "rationale" : "Verification is relevant, but the stated fact (police interest) was accurate and from a reliable police source."
+}, {
+  "argument" : {
+    "id" : "G8",
+    "side" : "government",
+    "text" : "The programme as a whole gave the impression that K.U. was possibly guilty of a crime, and its message did not require showing K.U.'s photograph or mentioning his name; the whole programme was structured around him."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.5,
+  "rationale" : "The structure around K.U. with trial footage and photograph is the strongest point, but journalists choose presentation and K.U. was central to the investigation."
+}, {
+  "argument" : {
+    "id" : "G9",
+    "side" : "government",
+    "text" : "The applicants had admitted before the Court of Appeal that K.U. was not the subject of the programme but now argued the contrary before the Court."
+  },
+  "category" : "OTHER",
+  "strength" : 0.2,
+  "rationale" : "An alleged inconsistency in the applicants' submissions has little bearing on the Article 10 balance."
+}, {
+  "argument" : {
+    "id" : "G10",
+    "side" : "government",
+    "text" : "The domestic courts properly found that the applicants must have considered it very likely that the programme contained a false insinuation aimed at K.U., and thus acted with intent."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.3,
+  "rationale" : "Relies on a domestic finding of intent poorly reasoned given the accuracy of the facts."
+}, {
+  "argument" : {
+    "id" : "G11",
+    "side" : "government",
+    "text" : "The applicants did not seek legal advice on publishing K.U.'s name and photograph, either before the first broadcast or after K.U. contacted them."
+  },
+  "category" : "OTHER",
+  "strength" : 0.15,
+  "rationale" : "Failure to seek legal advice is marginally relevant to the standard of care."
+}, {
+  "argument" : {
+    "id" : "G12",
+    "side" : "government",
+    "text" : "Even though K.U. could be considered a public figure, that did not justify making a false insinuation about him."
+  },
+  "category" : "STATUS_OF_PERSON",
+  "strength" : 0.35,
+  "rationale" : "K.U. was a well-known businessman on trial for economic crimes, so he must tolerate wider criticism; the argument presupposes a false insinuation."
+}, {
+  "argument" : {
+    "id" : "G13",
+    "side" : "government",
+    "text" : "The sanctions were modest and considerably smaller than in some previous cases, so the interference was proportionate and a fair balance was struck between the competing interests."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.35,
+  "rationale" : "The sums were modest, but a criminal conviction of journalists carries a chilling effect the Court views seriously."
+} ]

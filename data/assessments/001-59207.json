@@ -1,0 +1,226 @@
+[ {
+  "argument" : {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "Article 130 of the Criminal Code, on which the conviction was based, was not formulated with sufficient precision and clarity to satisfy the 'prescribed by law' requirement."
+  },
+  "category" : "LAWFULNESS_AND_AIM",
+  "strength" : 0.2,
+  "rationale" : "Challenges foreseeability of Article 130; the provision was general but established and interpreted by courts, so the argument is weak."
+}, {
+  "argument" : {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "The conviction was not proportionate to the legitimate aim pursued and was not necessary in a democratic society."
+  },
+  "category" : "OTHER",
+  "strength" : 0.4,
+  "rationale" : "A general proportionality claim without specific grounds; relevant but contestable given the gratuitous wording and modest penalty."
+}, {
+  "argument" : {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "The impugned expressions should not have been qualified as insulting; the courts uncritically followed a flawed expert opinion of the Estonian Language Institute which failed to distinguish between the two terms."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.3,
+  "rationale" : "Disputes the characterisation of the words as insulting, but the domestic courts' reliance on linguistic expertise falls within their margin of appreciation."
+}, {
+  "argument" : {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "The term 'abielulõhkuja' was a statement of fact verifiable by the facts: Ms Laanaru's relationship was with a married man and had actually destroyed his family, as she herself admitted in her memoirs, and the relationship was in the public domain."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.35,
+  "rationale" : "Claims factual basis for 'abielulõhkuja'. Some underlying facts exist, but the term is a pejorative value judgment rather than a verifiable fact."
+}, {
+  "argument" : {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "The term 'rongaema' was a value judgment; although traditionally carrying a strong negative connotation, in today's pragmatic usage that connotation may have disappeared given radical social changes regarding single motherhood, the interview was aimed at the general public rather than linguists, and even the traditional meaning was not vulgar or insulting; it was based on Ms Laanaru's own reflections on her relationship with her child."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.3,
+  "rationale" : "Argues the connotation of 'rongaema' has softened and the word had a factual basis. This is undermined by the expert view of its strong negative meaning and by the fact that the child was cared for by grandparents."
+}, {
+  "argument" : {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "Both expressions were not disproportionate to the underlying facts and should not have been regarded as offensive."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.35,
+  "rationale" : "Asserts a sufficient factual basis for both terms; the facts were partly known, but the words went beyond what those facts warranted."
+}, {
+  "argument" : {
+    "id" : "A7",
+    "side" : "applicant",
+    "text" : "He did not intend to offend Ms Laanaru; the question was meant to provoke a reaction from Mr Russak rather than to state his own opinion, and concerned the attitude of the press towards a particular type of personality in Estonian society rather than Ms Laanaru as an individual."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.25,
+  "rationale" : "Invokes question form and lack of intent. The words were evidently aimed at Laanaru personally, and the refusal to apologise weakens the claim."
+}, {
+  "argument" : {
+    "id" : "A8",
+    "side" : "applicant",
+    "text" : "The dispute was civil in nature and should not have been tried in a criminal court; the Supreme Court wrongly held that honour could be protected against value judgments only through criminal law, a position it reversed on 1 December 1997, and the availability of civil remedies made his criminal conviction a grave injustice."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.4,
+  "rationale" : "Criticises the use of criminal rather than civil proceedings, which is relevant to chilling effect. However, this was a private prosecution with a minimal fine."
+}, {
+  "argument" : {
+    "id" : "A9",
+    "side" : "applicant",
+    "text" : "Ms Laanaru was a public figure in her own right, having held the influential post of counsellor to the Minister of the Interior, been an active social figure and editor, and having placed herself at the centre of the secret tape-recording scandal to gain publicity; she was therefore open to heightened criticism and press scrutiny."
+  },
+  "category" : "STATUS_OF_PERSON",
+  "strength" : 0.45,
+  "rationale" : "Laanaru had some public role through her counsellor post and the tape scandal, but by 1996 she had left office; her public-figure status is limited."
+}, {
+  "argument" : {
+    "id" : "A10",
+    "side" : "applicant",
+    "text" : "By making her role in Mr Savisaar's first marriage and her relationship with her child a public issue herself, Ms Laanaru lessened the scope of her privacy."
+  },
+  "category" : "PRIOR_CONDUCT",
+  "strength" : 0.35,
+  "rationale" : "Her memoirs did raise these private issues, but she sought to stop their publication, so her own conduct only partly reduces her privacy."
+}, {
+  "argument" : {
+    "id" : "A11",
+    "side" : "applicant",
+    "text" : "The question pursued a legitimate motive on a matter of public interest, as the tape-recording affair and other controversial measures involving Mr Savisaar while Ms Laanaru was his counsellor raised legitimate questions about the ethics and values of those in power; the expressions served the public interest in receiving information and not mere curiosity."
+  },
+  "category" : "PUBLIC_INTEREST",
+  "strength" : 0.35,
+  "rationale" : "The tape affair and the ethics of those in power were matters of public interest, but her child-raising and marital matters contributed little to that debate."
+}, {
+  "argument" : {
+    "id" : "A12",
+    "side" : "applicant",
+    "text" : "He did not exceed the limits of acceptable criticism, his journalistic freedom outweighed Ms Laanaru's right to respect for private and family life, and the courts' decisions amounted to a form of censure likely to discourage journalists from similar criticism in the future."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.35,
+  "rationale" : "Invokes chilling effect and the limits of acceptable criticism; this is relevant in principle, but the sanction was mild and the words gratuitous."
+}, {
+  "argument" : {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "Article 130 of the Criminal Code defined the offence of insult in sufficiently precise terms to allow the applicant to regulate his professional conduct, and its interpretation by the domestic courts did not go beyond what was reasonably foreseeable."
+  },
+  "category" : "LAWFULNESS_AND_AIM",
+  "strength" : 0.75,
+  "rationale" : "Article 130 had a sufficient legal basis and its application was foreseeable."
+}, {
+  "argument" : {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "The interference pursued the legitimate aim of protecting the reputation or rights of others."
+  },
+  "category" : "LAWFULNESS_AND_AIM",
+  "strength" : 0.85,
+  "rationale" : "Protecting reputation is plainly a legitimate aim and was undisputed."
+}, {
+  "argument" : {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "The interference corresponded to a pressing social need, was proportionate, was supported by relevant and sufficient reasons, and remained within the national margin of appreciation."
+  },
+  "category" : "OTHER",
+  "strength" : 0.6,
+  "rationale" : "A general necessity claim; it is supported by relevant reasons and a modest sanction, though it is generic in form."
+}, {
+  "argument" : {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "The wider limits of criticism applicable to politicians and civil servants did not apply to Ms Laanaru to the same extent, as she was active in politics only as Mr Savisaar's wife, collaborator and supporter, not independently; references to the private life of an ordinary citizen, even one linked to a prominent politician, did not concern a matter of serious public interest."
+  },
+  "category" : "STATUS_OF_PERSON",
+  "strength" : 0.65,
+  "rationale" : "Correctly notes Laanaru's derivative political role, and that her private life was of limited public concern at the time."
+}, {
+  "argument" : {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "The relationship between a woman who had left the civil service and a man who had at the time withdrawn from politics was a very private matter, and insulting comments on a private person's family life served no social purpose."
+  },
+  "category" : "PUBLIC_INTEREST",
+  "strength" : 0.65,
+  "rationale" : "Both had left office, so insulting references to her family life served little public purpose."
+}, {
+  "argument" : {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The applicant chose the words to provoke and create sensational headlines and did not act in good faith; in any event an alleged need to inform the public could not exonerate him from respecting journalistic ethics and defamation law."
+  },
+  "category" : "TRUTH_AND_VERIFICATION",
+  "strength" : 0.45,
+  "rationale" : "Bad faith is asserted with limited proof, although the gratuitous wording and refusal to apologise give it some support."
+}, {
+  "argument" : {
+    "id" : "G7",
+    "side" : "government",
+    "text" : "The applicant was not convicted for describing facts or expressing critical opinion about Ms Laanaru's personality or private life, but for his choice of insulting words; describing her as having broken up a marriage or not caring for her child would not have been an insult, as the Court of Appeal pointed out."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.75,
+  "rationale" : "A strong point: the conviction targeted the gratuitous form of expression, not the facts or criticism, and the idea could have been conveyed without insult."
+}, {
+  "argument" : {
+    "id" : "G8",
+    "side" : "government",
+    "text" : "The words 'rongaema' and 'abielulõhkuja' have a very special meaning in Estonian with no English equivalent, and their specific linguistic and cultural nature must be taken into account."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.6,
+  "rationale" : "The linguistic and cultural specificity of the words favours deference to the domestic courts' assessment."
+}, {
+  "argument" : {
+    "id" : "G9",
+    "side" : "government",
+    "text" : "The words were used to denigrate Ms Laanaru in public opinion rather than to describe known aspects of her life; entrusting a child to grandparents is quite common in Estonia."
+  },
+  "category" : "CONTENT_AND_FORM",
+  "strength" : 0.6,
+  "rationale" : "The words denigrated rather than informed, and the factual premise of the 'rongaema' label was weak."
+}, {
+  "argument" : {
+    "id" : "G10",
+    "side" : "government",
+    "text" : "Ms Laanaru had not placed her private life in the public domain: the interview was with another journalist, not her, and she had obtained a court order on 29 March 1996 preventing publication of her memoirs, no longer intending to make them public."
+  },
+  "category" : "PRIOR_CONDUCT",
+  "strength" : 0.6,
+  "rationale" : "Laanaru had sought to stop publication of her memoirs, which supports the view that she did not invite public scrutiny of her private life."
+}, {
+  "argument" : {
+    "id" : "G11",
+    "side" : "government",
+    "text" : "The proceedings were a private prosecution initiated by Ms Laanaru; the City Court attempted a settlement which the applicant refused by declining to apologise, the public prosecutor never intervened despite being invited, and the executive remained entirely neutral."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.5,
+  "rationale" : "A private prosecution, an offered settlement and state neutrality all reduce concerns about state censorship."
+}, {
+  "argument" : {
+    "id" : "G12",
+    "side" : "government",
+    "text" : "The sanction was only a modest fine of 220 kroons, ten times the minimum daily salary."
+  },
+  "category" : "SEVERITY_OF_SANCTION",
+  "strength" : 0.65,
+  "rationale" : "A modest fine weighs significantly in favour of proportionality, even though the conviction was criminal."
+}, {
+  "argument" : {
+    "id" : "G13",
+    "side" : "government",
+    "text" : "The domestic courts balanced the Article 8 rights of Ms Laanaru against the applicant's Article 10 rights, and the Supreme Court applied the same test as the Strasbourg Court with ample reference to its case-law in a thoroughly reasoned judgment."
+  },
+  "category" : "OTHER",
+  "strength" : 0.6,
+  "rationale" : "The domestic courts' reasoned balancing, with reference to Strasbourg case-law, supports deference under the margin of appreciation."
+} ]

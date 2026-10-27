@@ -1,0 +1,325 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>QBAF Graph</title>
+<style>
+  :root {
+    --bg: #f7f7f5; --panel: #ffffff; --text: #1d1d1f; --muted: #6b6b70; --line: #e2e2e0;
+    --violation: #b03a2e; --no-violation: #1f6f8b;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root { --bg: #161618; --panel: #1f1f22; --text: #ececee; --muted: #9a9aa0; --line: #333338;
+            --violation: #e06c5f; --no-violation: #5fb3d1; }
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--text);
+         font: 15px/1.5 system-ui, -apple-system, "Segoe UI", Arial, sans-serif; }
+  main { max-width: 1200px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 22px; margin: 0 0 4px; }
+  .sub { color: var(--muted); margin: 0 0 20px; }
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 10px; padding: 16px; margin-bottom: 16px; }
+  .verdict { display: flex; flex-wrap: wrap; gap: 24px; align-items: center; }
+  .verdict .item b { display: block; font-size: 13px; color: var(--muted); font-weight: 500; }
+  .verdict .item span { font-size: 18px; font-weight: 600; }
+  .ok { color: #2e8b57; } .bad { color: #c0392b; }
+  .bars { flex: 1 1 320px; }
+  .bar { display: flex; align-items: center; gap: 8px; margin: 4px 0; }
+  .bar .label { width: 90px; font-size: 13px; }
+  .bar .track { flex: 1; height: 14px; background: var(--line); border-radius: 7px; overflow: hidden; }
+  .bar .fill { height: 100%; border-radius: 7px; }
+  .bar .num { width: 52px; font-variant-numeric: tabular-nums; font-size: 13px; text-align: left; }
+  svg { width: 100%; height: auto; display: block; }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 13px; margin-top: 8px; }
+  .legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-left: 6px; vertical-align: -1px; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
+  th, td { text-align: right; padding: 8px 6px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { color: var(--muted); font-weight: 500; font-size: 13px; }
+  td.en { direction: ltr; text-align: left; }
+  tr.selected { background: color-mix(in srgb, var(--no-violation) 14%, transparent); }
+  .chip { display: inline-block; padding: 1px 8px; border-radius: 10px; color: #fff; font-size: 12px; white-space: nowrap; }
+  .table-wrap { overflow-x: auto; }
+  .node { cursor: pointer; }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="title"></h1>
+  <p class="sub">גרף QBAF מהטענות האמיתיות בפסק הדין. משקל קשת = ציון השופט × θ של הקטגוריה (כרגע θ = 1).</p>
+
+  <section class="panel verdict">
+    <div class="item"><b>הכרעת המערכת</b><span id="predicted"></span></div>
+    <div class="item"><b>הכרעת בית הדין</b><span id="actual"></span></div>
+    <div class="item"><b>התאמה</b><span id="match"></span></div>
+    <div class="bars" id="bars"></div>
+  </section>
+
+  <section class="panel">
+    <svg id="graph" role="img" aria-label="QBAF graph"></svg>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="panel table-wrap">
+    <table>
+      <thead><tr><th>#</th><th>צד</th><th>קטגוריה</th><th>ציון</th><th>טיעון</th><th>נימוק השופט</th></tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+</main>
+<script>
+const DATA = {
+  "caseId" : "001-85085",
+  "title" : "Rumyana Ivanova v. Bulgaria",
+  "actualOutcome" : "no_violation",
+  "predictedOutcome" : "no_violation",
+  "scores" : {
+    "violation" : 3.5999999999999996,
+    "no_violation" : 4.1000000000000005
+  },
+  "arguments" : [ {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "In a democratic society it is not necessary to resort to penal sanctions to curtail freedom of expression; criminal law has an unduly chilling effect on freedom of expression, particularly for journalists, who do not have their own sources but rely on others for information.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.5,
+    "weight" : 0.5,
+    "supports" : "violation",
+    "rationale" : "Concerns the chilling effect of criminal sanctions; relevant under the case-law, though the Court does not consider criminal defamation incompatible per se, and here only a minimum administrative fine was imposed."
+  }, {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "Criminal liability is problematic because journalists work and verify information in teams, whereas penal sanctions are individual.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.25,
+    "weight" : 0.25,
+    "supports" : "violation",
+    "rationale" : "Abstract critique of individual criminal liability for teamwork journalism; it has little bearing on the proportionality of this particular sanction."
+  }, {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "Requiring defendants in defamation proceedings to prove the truth of their statements is disproportionate. The courts examine only the truth of the statements and do not examine the reputation of the person allegedly defamed, which is wrongly assumed to be good. This leads to abuse of rights and de facto no-fault liability.",
+    "category" : "truth_and_verification",
+    "strength" : 0.25,
+    "weight" : 0.25,
+    "supports" : "violation",
+    "rationale" : "Attacks the burden of proving truth; the Court accepts that defendants may be required to prove factual statements, so this argument is weak."
+  }, {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "The courts did not consider the extent to which the allegations actually affected Mr M. D.'s reputation. They wrongly held him defamed because of a simple mistake in the names of the companies through which he featured on the bad debtors' list.",
+    "category" : "truth_and_verification",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "violation",
+    "rationale" : "Characterises the falsity as a minor error about company names; this is contestable because the domestic courts found that the specific false details were the core of the defamation."
+  }, {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "The publication did not materially affect Mr M. D.'s standing in society. Its purpose was to inform the public about the candidates for deputy Minister of Finance, and the availability of information on that topic mattered more than the identity of the company through which he featured on the list.",
+    "category" : "public_interest",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "violation",
+    "rationale" : "The article concerned a candidate for deputy finance minister and the credit-millionaires issue, clearly a matter of public interest, though this does not excuse false specifics."
+  }, {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "The finding that the statement was untrue was erroneous. Only the names of the companies were wrong; Mr M. D. was in fact a 'credit millionaire', as shown by his participation in Vitaplant OOD. Her error was induced by the Members of Parliament who tipped her off.",
+    "category" : "truth_and_verification",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "violation",
+    "rationale" : "Points to a factual basis via Vitaplant OOD, but the courts found that link indirect and insubstantial, and the precise allegations about three named companies were false."
+  }, {
+    "id" : "A7",
+    "side" : "applicant",
+    "text" : "The Government's claim that she did not consult the Bulgarian National Bank list conflicts with the Sofia City Court's own finding that Mr M. D. featured on that list through Vitaplant OOD, which she proved.",
+    "category" : "truth_and_verification",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "violation",
+    "rationale" : "Notes an inconsistency in the verification critique, but proving a link after the fact does not show she consulted the list before publishing."
+  }, {
+    "id" : "A8",
+    "side" : "applicant",
+    "text" : "The Sofia City Court's ruling that she had to check the register of companies was excessive. No such obligation existed, and the check would have been unfeasible given the time it would have taken.",
+    "category" : "truth_and_verification",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "violation",
+    "rationale" : "Disputes the extent of the duty to verify; the register was public and the courts found she had time to check it, so the argument is only partially persuasive."
+  }, {
+    "id" : "A9",
+    "side" : "applicant",
+    "text" : "The domestic courts erred in not calling the Members of Parliament she had spoken to, whose names emerged from Ms N.'s testimony. These MPs, one of whom was a business associate of Mr M. D., tricked her into publishing inaccurate information in order to procure a judgment declaring that he was not a 'credit millionaire' and to conceal his involvement in Vitaplant OOD.",
+    "category" : "truth_and_verification",
+    "strength" : 0.2,
+    "weight" : 0.2,
+    "supports" : "violation",
+    "rationale" : "Speculative manipulation theory; she herself refused to name the MP, which undermines her complaint about the courts not calling the witnesses."
+  }, {
+    "id" : "A10",
+    "side" : "applicant",
+    "text" : "Mr M. D. suffered no real prejudice to his reputation, because through Vitaplant OOD he had taken out loans and failed to repay them, as shown by contracts he himself produced in court.",
+    "category" : "truth_and_verification",
+    "strength" : 0.3,
+    "weight" : 0.3,
+    "supports" : "violation",
+    "rationale" : "Claims his reputation was not harmed because he was in substance a bad debtor; the courts found no direct, substantial link, which weakens the argument."
+  }, {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "Journalists' freedom of expression should not be exercised by damaging individuals' reputations. The key question is whether the journalist fulfilled her duty to ensure the accuracy of the information. Here the public was misled because the information was untrue.",
+    "category" : "truth_and_verification",
+    "strength" : 0.65,
+    "weight" : 0.65,
+    "supports" : "no_violation",
+    "rationale" : "Correctly invokes the journalist's duty to act in good faith and provide accurate information; the specific statements were untrue."
+  }, {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "Journalists relying on an official document need not verify its accuracy. However, the applicant neither consulted the official BNB list nor checked the register of companies. She trusted her sources without verification, although Trud's book and its preface were not an official publication.",
+    "category" : "truth_and_verification",
+    "strength" : 0.65,
+    "weight" : 0.65,
+    "supports" : "no_violation",
+    "rationale" : "She did not see the official document she cited and relied on secondary sources; this is a fair point about inadequate verification of specific factual claims."
+  }, {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "The applicant failed to carry out a proper journalistic enquiry. She supported her allegation with specific but untrue statements that created a false impression of verified, authentic information, and she admitted at trial that she had not properly verified it.",
+    "category" : "truth_and_verification",
+    "strength" : 0.65,
+    "weight" : 0.65,
+    "supports" : "no_violation",
+    "rationale" : "The false precise details gave a misleading appearance of an authenticated official source; this is a strong point on verification and good faith."
+  }, {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "The statement was negative, led to grave public disapproval of Mr M. D., and was presented as a statement of fact. It therefore required serious proof.",
+    "category" : "truth_and_verification",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "A serious factual allegation does require a sufficient factual basis, though the term 'credit millionaire' was a common label in public debate."
+  }, {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "Both domestic courts allowed the parties to adduce evidence on the truth of the allegation and found it untrue, giving ample reasons. The Sofia City Court specifically addressed the argument concerning Mr M. D.'s participation in another company.",
+    "category" : "truth_and_verification",
+    "strength" : 0.55,
+    "weight" : 0.55,
+    "supports" : "no_violation",
+    "rationale" : "The courts allowed evidence on truth on appeal and gave reasons, which supports the procedural fairness of the defamation proceedings."
+  }, {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The remedy used by Mr M. D., a private criminal complaint with a civil claim, was ordinary and available to anyone whose reputation is attacked.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.4,
+    "weight" : 0.4,
+    "supports" : "no_violation",
+    "rationale" : "The remedy was prescribed by law and pursued protection of reputation; this is uncontested but carries little weight on proportionality."
+  }, {
+    "id" : "G7",
+    "side" : "government",
+    "text" : "The courts waived the applicant's criminal liability and imposed only an administrative punishment, and the damages awarded were not unreasonable.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.6,
+    "weight" : 0.6,
+    "supports" : "no_violation",
+    "rationale" : "A minimum administrative fine and moderate damages weigh in favour of proportionality, although the conviction still remains criminal in nature."
+  } ]
+};
+
+const COLORS = {
+  public_interest: "#2f7fc1", status_of_person: "#8e5bb5", prior_conduct: "#c2408a",
+  truth_and_verification: "#1a9a7f", content_and_form: "#d3732a", severity_of_sanction: "#b8962e",
+  lawfulness_and_aim: "#6b7785", other: "#9aa1a8"
+};
+const LABELS = { violation: "הפרה", no_violation: "אין הפרה" };
+const css = getComputedStyle(document.documentElement);
+const decisionColor = d => css.getPropertyValue(d === "violation" ? "--violation" : "--no-violation").trim();
+
+document.getElementById("title").textContent = DATA.title + " (" + DATA.caseId + ")";
+document.getElementById("predicted").textContent = LABELS[DATA.predictedOutcome] || DATA.predictedOutcome;
+document.getElementById("actual").textContent = LABELS[DATA.actualOutcome];
+const match = document.getElementById("match");
+match.textContent = DATA.predictedOutcome === DATA.actualOutcome ? "✓ נכון" : "✗ לא נכון";
+match.className = DATA.predictedOutcome === DATA.actualOutcome ? "ok" : "bad";
+
+const maxScore = Math.max(...Object.values(DATA.scores), 0.001);
+document.getElementById("bars").innerHTML = Object.entries(DATA.scores).map(([d, v]) =>
+  `<div class="bar"><span class="label">${LABELS[d]}</span>
+     <span class="track"><span class="fill" style="display:block;width:${(v / maxScore) * 100}%;background:${decisionColor(d)}"></span></span>
+     <span class="num">${v.toFixed(2)}</span></div>`).join("");
+
+// פריסה: טיעוני המבקש משמאל → "הפרה"; טיעוני הממשלה מימין → "אין הפרה"
+const applicant = DATA.arguments.filter(a => a.side === "applicant");
+const government = DATA.arguments.filter(a => a.side === "government");
+const rowGap = 58, padTop = 40;
+const height = padTop * 2 + Math.max(applicant.length, government.length, 2) * rowGap;
+const W = 1000, colA = 90, colG = W - 90, decA = 400, decG = 600;
+const svg = document.getElementById("graph");
+svg.setAttribute("viewBox", `0 0 ${W} ${height}`);
+const NS = "http://www.w3.org/2000/svg";
+const el = (tag, attrs, parent = svg) => {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  parent.appendChild(e);
+  return e;
+};
+const yOf = (i, n) => padTop + (height - 2 * padTop) * (n === 1 ? 0.5 : i / (n - 1));
+const decY = height / 2;
+
+function drawSide(list, x, decX) {
+  list.forEach((a, i) => {
+    const y = yOf(i, list.length);
+    el("line", { x1: x, y1: y, x2: decX, y2: decY, stroke: COLORS[a.category],
+                 "stroke-width": 1 + a.weight * 9, "stroke-opacity": 0.55, "stroke-linecap": "round" });
+    a._pos = { x, y };
+  });
+}
+drawSide(applicant, colA, decA);
+drawSide(government, colG, decG);
+
+for (const [d, x] of [["violation", decA], ["no_violation", decG]]) {
+  el("rect", { x: x - 70, y: decY - 30, width: 140, height: 60, rx: 12, fill: decisionColor(d) });
+  const t = el("text", { x, y: decY + 6, "text-anchor": "middle", fill: "#fff", "font-size": 18, "font-weight": 600 });
+  t.textContent = LABELS[d];
+}
+
+for (const a of DATA.arguments) {
+  const g = el("g", { class: "node", "data-id": a.id });
+  el("circle", { cx: a._pos.x, cy: a._pos.y, r: 20, fill: COLORS[a.category] }, g);
+  const t = el("text", { x: a._pos.x, y: a._pos.y + 5, "text-anchor": "middle", fill: "#fff", "font-size": 14, "font-weight": 600 }, g);
+  t.textContent = a.id;
+  const tip = el("title", {}, g);
+  tip.textContent = `${a.id} · ${a.category} · ${a.strength.toFixed(2)}\n${a.text}`;
+  g.addEventListener("click", () => select(a.id));
+}
+
+document.getElementById("legend").innerHTML = Object.entries(COLORS)
+  .map(([c, col]) => `<span><i style="background:${col}"></i>${c}</span>`).join("");
+
+const rows = document.getElementById("rows");
+rows.innerHTML = DATA.arguments.map(a =>
+  `<tr id="row-${a.id}"><td><b>${a.id}</b></td><td>${a.side === "applicant" ? "המבקש" : "הממשלה"}</td>
+     <td><span class="chip" style="background:${COLORS[a.category]}">${a.category}</span></td>
+     <td>${a.strength.toFixed(2)}</td><td class="en"></td><td class="en"></td></tr>`).join("");
+DATA.arguments.forEach(a => {
+  const cells = document.querySelectorAll(`#row-${a.id} td.en`);
+  cells[0].textContent = a.text;
+  cells[1].textContent = a.rationale;
+});
+
+function select(id) {
+  document.querySelectorAll("tr.selected").forEach(r => r.classList.remove("selected"));
+  const row = document.getElementById("row-" + id);
+  row.classList.add("selected");
+  row.scrollIntoView({ behavior: "smooth", block: "center" });
+}
+</script>
+</body>
+</html>
