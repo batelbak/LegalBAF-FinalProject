@@ -14,6 +14,8 @@
   --def: #23538A;
   --def-soft: #E5EDF6;
   --unweighed: #A3ABBA;
+  --support: #2E7D4F;
+  --attack: #B5532A;
   --font-display: "Libre Caslon Text", "Georgia", "Times New Roman", serif;
   --font-body: "Source Sans 3", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
   --font-mono: "IBM Plex Mono", "Consolas", "Menlo", monospace;
@@ -23,6 +25,7 @@
     --paper: #0E1420; --surface: #161F31; --ink: #E5E9F0; --muted: #9AA4B7; --line: #2A3550;
     --masthead: #0A0F1A; --masthead-ink: #E5E9F0; --brass: #CFAB70; --brass-soft: #2B2618;
     --pros: #D9717F; --pros-soft: #2E1A20; --def: #73A3DA; --def-soft: #15243A; --unweighed: #5C667A;
+    --support: #5FBF87; --attack: #E58A5C;
     color-scheme: dark;
   }
 }
@@ -30,6 +33,7 @@
   --paper: #0E1420; --surface: #161F31; --ink: #E5E9F0; --muted: #9AA4B7; --line: #2A3550;
   --masthead: #0A0F1A; --masthead-ink: #E5E9F0; --brass: #CFAB70; --brass-soft: #2B2618;
   --pros: #D9717F; --pros-soft: #2E1A20; --def: #73A3DA; --def-soft: #15243A; --unweighed: #5C667A;
+  --support: #5FBF87; --attack: #E58A5C;
   color-scheme: dark;
 }
 

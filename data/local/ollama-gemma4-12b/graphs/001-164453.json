@@ -1,0 +1,235 @@
+{
+  "caseId" : "001-164453",
+  "title" : "Ziembiński v. Poland (No. 2)",
+  "claim" : "The interference with the applicant's freedom of expression violated Article 10 of the Convention.",
+  "actualOutcome" : "violation",
+  "predictedOutcome" : "violation",
+  "claimStrength" : 0.512498576,
+  "arguments" : [ {
+    "id" : "A1",
+    "side" : "applicant",
+    "text" : "He had not harmed other people's good name or violated their rights; he had not even put the initials of the district officials in his article.",
+    "category" : "truth_and_verification",
+    "strength" : 0.4,
+    "baseScore" : 0.4,
+    "finalStrength" : 0.4,
+    "edges" : [ {
+      "from" : "A1",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "depth" : 1,
+    "rationale" : "The applicant argues lack of harm and anonymity. While relevant to the 'intent' of defamation, the court found the individuals easily identifiable, weakening this point."
+  }, {
+    "id" : "G1",
+    "side" : "government",
+    "text" : "The interference was prescribed by law, namely Article 216 of the Criminal Code, and pursued the legitimate aim of protecting the reputation or rights of others.",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.7,
+    "baseScore" : 0.7,
+    "finalStrength" : 0.7,
+    "edges" : [ {
+      "from" : "G1",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "depth" : 1,
+    "rationale" : "The state's argument that the law is clear and the aim is protecting reputation is a standard and strong justification under Article 10 § 2."
+  }, {
+    "id" : "A2",
+    "side" : "applicant",
+    "text" : "He had respected the principle of accuracy required of journalists under the Press Act; relying on the Constitutional Court's judgment of 12 May 2008, a person accused of insult should not be held liable if he complied with standards of accuracy and reliability in gathering and verifying information, even if the allegations proved false.",
+    "category" : "truth_and_verification",
+    "strength" : 0.5,
+    "baseScore" : 0.5,
+    "finalStrength" : 0.5,
+    "edges" : [ {
+      "from" : "A2",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "depth" : 1,
+    "rationale" : "Relies on a specific domestic constitutional ruling regarding accuracy. It is relevant but the court's finding of 'insult' often bypasses the truth of the underlying facts."
+  }, {
+    "id" : "G2",
+    "side" : "government",
+    "text" : "While there is little scope under Article 10 § 2 for restrictions on political speech or debate on matters of public interest, the domestic courts gave relevant and sufficient reasons and thoroughly justified their finding that the applicant's statements amounted to insult.",
+    "category" : "other",
+    "strength" : 0.6,
+    "baseScore" : 0.6,
+    "finalStrength" : 0.18,
+    "edges" : [ {
+      "from" : "G2",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "depth" : 1,
+    "rationale" : "The government argues the court provided sufficient reasoning. This is a standard procedural defense regarding the margin of appreciation."
+  }, {
+    "id" : "A3",
+    "side" : "applicant",
+    "text" : "He had accurately reported on the quail farm project having been appropriated by local officials, and the interference with his right to present his opinion on negative phenomena in local life was unjustified; the Press Act and the Constitution enable free and independent media to criticise the exercise of power by local government.",
+    "category" : "public_interest",
+    "strength" : 0.8,
+    "baseScore" : 0.8,
+    "finalStrength" : 0.8,
+    "edges" : [ {
+      "from" : "A3",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "depth" : 1,
+    "rationale" : "Criticism of local government projects and the exercise of power is a core area of public interest where freedom of expression is highly protected."
+  }, {
+    "id" : "G3",
+    "side" : "government",
+    "text" : "The applicant overstepped the limits of acceptable criticism.",
+    "category" : "content_and_form",
+    "strength" : 0.7,
+    "baseScore" : 0.7,
+    "finalStrength" : 0.49,
+    "edges" : [ {
+      "from" : "G3",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "depth" : 1,
+    "rationale" : "The government argues the tone exceeded 'fair criticism'. This is a central point in balancing the right to criticize vs. the right to dignity."
+  }, {
+    "id" : "A4",
+    "side" : "applicant",
+    "text" : "He had not insulted any person, since he used no names or initials and criticised only methods and acts, without mentioning the office concerned; the words were not directed at anyone personally but at the problem of populist activity by the authorities and the supposed work of local officials.",
+    "category" : "content_and_form",
+    "strength" : 0.5,
+    "baseScore" : 0.5,
+    "finalStrength" : 0.5,
+    "edges" : [ {
+      "from" : "A4",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "depth" : 1,
+    "rationale" : "Argues the words were directed at the 'problem' rather than the 'person'. This is a common defense in defamation but often overridden by the 'identifiability' of the targets."
+  }, {
+    "id" : "G4",
+    "side" : "government",
+    "text" : "The fine of PLN 10,000 was calculated in the light of the applicant's financial situation; the courts chose not to impose restriction of liberty or imprisonment, and the penalty was the most lenient available and proportionate to his guilt and the social danger of his act.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.6,
+    "baseScore" : 0.6,
+    "finalStrength" : 0.6,
+    "edges" : [ {
+      "from" : "G4",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "depth" : 1,
+    "rationale" : "The government argues the fine was proportionate and the least severe option. This is a key factor in determining a violation of Article 10."
+  }, {
+    "id" : "A5",
+    "side" : "applicant",
+    "text" : "Dictionaries did not list the words used as insulting expressions.",
+    "category" : "content_and_form",
+    "strength" : 0.3,
+    "baseScore" : 0.3,
+    "finalStrength" : 0.3,
+    "edges" : [ {
+      "from" : "A5",
+      "to" : "G3",
+      "relation" : "attack"
+    } ],
+    "depth" : 2,
+    "rationale" : "Dictionary definitions are less relevant than the subjective impact and context of the words in a specific publication."
+  }, {
+    "id" : "G5",
+    "side" : "government",
+    "text" : "The Constitutional Court (P 10/06 and SK 43/05) stressed that while freedom of expression is important, individual dignity must also be protected and may prevail; criminal-law protection of reputation and good name is not unconstitutional in itself, since the consequences of an attack on a person's good name cannot be reversed and later apologies cannot eradicate it.",
+    "category" : "other",
+    "strength" : 0.6,
+    "baseScore" : 0.6,
+    "finalStrength" : 0.12,
+    "edges" : [ {
+      "from" : "G5",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "depth" : 1,
+    "rationale" : "The government relies on the principle that dignity can prevail over expression. This is a recognized balancing test in European jurisprudence."
+  }, {
+    "id" : "A6",
+    "side" : "applicant",
+    "text" : "Public figures must accept the risk of being exposed to more severe criticism.",
+    "category" : "status_of_person",
+    "strength" : 0.9,
+    "baseScore" : 0.9,
+    "finalStrength" : 0.9,
+    "edges" : [ {
+      "from" : "A6",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "depth" : 1,
+    "rationale" : "Public officials must tolerate a higher degree of criticism. This is a very strong principle in Article 10 case-law."
+  }, {
+    "id" : "G6",
+    "side" : "government",
+    "text" : "The criminal proceedings were initiated by a private bill of indictment lodged by private individuals, not by a public prosecutor.",
+    "category" : "other",
+    "strength" : 0.4,
+    "baseScore" : 0.4,
+    "finalStrength" : 0.4,
+    "edges" : [ {
+      "from" : "G6",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "depth" : 1,
+    "rationale" : "The fact that it was a private bill of indictment is a procedural detail that doesn't fundamentally change the legality of the interference."
+  }, {
+    "id" : "A7",
+    "side" : "applicant",
+    "text" : "Journalistic criticism need not be devoid of personal feelings or emotional engagement; newspapers are not government bulletins recording only facts, and emotionless publications would not be read, so a journalist cannot be forced to write without emotional engagement.",
+    "category" : "content_and_form",
+    "strength" : 0.7,
+    "baseScore" : 0.7,
+    "finalStrength" : 0.7,
+    "edges" : [ {
+      "from" : "A7",
+      "to" : "G2",
+      "relation" : "attack"
+    } ],
+    "depth" : 2,
+    "rationale" : "The Court has acknowledged that journalism can be emotive and not strictly 'objective' in its tone, especially in local contexts."
+  }, {
+    "id" : "A8",
+    "side" : "applicant",
+    "text" : "The punishment was disproportionate, having led to the gradual economic downfall of the newspaper.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.5,
+    "baseScore" : 0.5,
+    "finalStrength" : 0.5,
+    "edges" : [ {
+      "from" : "A8",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "depth" : 1,
+    "rationale" : "Economic impact on a publication is a relevant factor in assessing the 'chilling effect' of a criminal sanction."
+  }, {
+    "id" : "A9",
+    "side" : "applicant",
+    "text" : "The limits of acceptable criticism in such a case should have been determined through civil rather than criminal law.",
+    "category" : "severity_of_sanction",
+    "strength" : 0.8,
+    "baseScore" : 0.8,
+    "finalStrength" : 0.8,
+    "edges" : [ {
+      "from" : "A9",
+      "to" : "G5",
+      "relation" : "attack"
+    } ],
+    "depth" : 2,
+    "rationale" : "The use of criminal law for defamation is generally viewed with suspicion by the Court unless the offense is grave; civil remedies are preferred."
+  } ],
+  "pruned" : [ ]
+}

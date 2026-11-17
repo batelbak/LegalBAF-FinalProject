@@ -1,5 +1,8 @@
 package ac.qbaf.legalsim.web;
 
+import ac.qbaf.legalsim.llm.Llm;
+import ac.qbaf.legalsim.qbaf.QbafSemantics;
+import ac.qbaf.legalsim.simulation.TrialSimulation;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.sun.net.httpserver.HttpExchange;
@@ -18,9 +21,9 @@ import java.util.regex.Pattern;
  * GET  /api/health
  * GET  /api/cases
  * GET  /api/cases/{id}
- * GET  /api/cases/{id}/hearing          מצב א': הטענות האמיתיות והשקילה של השופט
+ * GET  /api/cases/{id}/hearing[?demo=true]  מצב א': הטענות האמיתיות והשקילה של השופט (demo: מזויף, בלי מודל)
  * GET  /api/cases/{id}/tipping-points   501 עד שיש TippingPointAnalyzer
- * POST /api/simulations                 {caseId, rounds} — 501 עד שיש TrialSimulation
+ * POST /api/simulations                 {caseId, rounds, fresh?, demo?} — הסימולציה האדברסרית (שמורה אם יש)
  * POST /api/strategy                    {caseId, side, text} — 501 עד שיש LitigationStrategy
  * </pre>
  */
@@ -54,7 +57,8 @@ public class ApiHandler implements HttpHandler {
 
     private Object route(String method, String path, HttpExchange exchange) throws IOException {
         if (path.equals("/api/health")) {
-            return Map.of("status", "ok");
+            return Map.of("status", "ok", "model", Llm.model(), "modelAvailable", Llm.available(),
+                    "semantics", QbafSemantics.configured().name());
         }
         if (path.equals("/api/cases") || path.equals("/api/cases/")) {
             requireMethod(method, "GET");
@@ -69,7 +73,7 @@ public class ApiHandler implements HttpHandler {
                 case "":
                     return cases.details(id);
                 case "/hearing":
-                    return cases.hearing(id);
+                    return cases.hearing(id, demo(exchange));
                 case "/tipping-points":
                     return cases.tippingPoints(id);
                 default:
@@ -79,7 +83,12 @@ public class ApiHandler implements HttpHandler {
         if (path.equals("/api/simulations")) {
             requireMethod(method, "POST");
             JsonNode request = readBody(exchange);
-            return cases.simulate(text(request, "caseId"), request.path("rounds").asInt(3));
+            int rounds = request.path("rounds").asInt(TrialSimulation.DEFAULT_ROUNDS);
+            if (rounds < 1 || rounds > TrialSimulation.MAX_ROUNDS) {
+                throw new BadRequestException("rounds must be between 1 and " + TrialSimulation.MAX_ROUNDS);
+            }
+            return cases.simulate(text(request, "caseId"), rounds, request.path("fresh").asBoolean(false),
+                    request.path("demo").asBoolean(false));
         }
         if (path.equals("/api/strategy")) {
             requireMethod(method, "POST");
@@ -87,6 +96,12 @@ public class ApiHandler implements HttpHandler {
             return cases.counterArguments(text(request, "caseId"), text(request, "text"));
         }
         throw new CaseService.NotFoundException("No such endpoint: " + method + " " + path);
+    }
+
+    /** ?demo=true בכתובת. */
+    private static boolean demo(HttpExchange exchange) {
+        String query = exchange.getRequestURI().getQuery();
+        return query != null && java.util.Arrays.asList(query.split("&")).contains("demo=true");
     }
 
     private static void requireMethod(String method, String expected) {

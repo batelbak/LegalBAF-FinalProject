@@ -30,11 +30,14 @@ public record LegalCase(
     public static final String VIOLATION = "violation";
     public static final String NO_VIOLATION = "no_violation";
 
-    /** גרף עם שני קודקודי ההחלטה המוגדרים מראש ובלי טיעונים. את הטיעונים מכניסים הסוכנים. */
+    public static final String CLAIM_TEXT =
+            "The interference with the applicant's freedom of expression violated Article 10 of the Convention.";
+
+    /**
+     * גרף שיש בו רק את הטענה המרכזית C, עם ציון בסיס ניטרלי. את הטיעונים מכניסים הסוכנים:
+     * כל טיעון תוקף או תומך ב-C או בטיעון קודם.
+     */
     public static QbafGraph emptyGraph() {
-        QbafGraph graph = new QbafGraph();
-        graph.addDecision(VIOLATION, "Violation of Article 10");
-        graph.addDecision(NO_VIOLATION, "No violation of Article 10");
-        return graph;
+        return new QbafGraph(CLAIM_TEXT);
     }
 }

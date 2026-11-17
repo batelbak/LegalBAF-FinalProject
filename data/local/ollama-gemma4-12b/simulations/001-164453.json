@@ -1,0 +1,1258 @@
+{
+  "caseId" : "001-164453",
+  "title" : "Ziembiński v. Poland (No. 2)",
+  "rounds" : 3,
+  "maxArguments" : 3,
+  "events" : [ {
+    "type" : "present",
+    "round" : 1,
+    "agent" : "prosecutor",
+    "side" : "applicant",
+    "argumentId" : "P1",
+    "text" : "The applicant, as a journalist and editor-in-chief, was exercising his right to provide a critical evaluation of public policy and the competence of local government officials, which is a core component of the freedom of expression protected by Article 10.",
+    "edges" : [ {
+      "from" : "P1",
+      "to" : "C",
+      "relation" : "support"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 1,
+    "agent" : "prosecutor",
+    "side" : "applicant",
+    "argumentId" : "P2",
+    "text" : "The officials involved are public figures who must tolerate a higher degree of criticism and more robust, even polemical, language than private individuals, especially when commenting on matters of public interest such as local economic development.",
+    "edges" : [ {
+      "from" : "P2",
+      "to" : "C",
+      "relation" : "support"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 1,
+    "agent" : "prosecutor",
+    "side" : "applicant",
+    "argumentId" : "P3",
+    "text" : "The use of irony and hyperbolic language, such as 'numbskull' or 'poser', serves as a tool of political commentary rather than a mere personal attack, intended to highlight the perceived lack of substance in the public administration's proposals.",
+    "edges" : [ {
+      "from" : "P3",
+      "to" : "C",
+      "relation" : "support"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 1,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D1",
+    "text" : "The domestic authorities' intervention was prescribed by law, as the Criminal Code clearly defines the limits of freedom of expression by prohibiting insults through the mass media to protect the dignity of individuals.",
+    "edges" : [ {
+      "from" : "D1",
+      "to" : "C",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 1,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D2",
+    "text" : "The interference pursued a legitimate aim by protecting the reputation and dignity of the officials, which is a recognized balancing point against the freedom of expression in the Court's case-law.",
+    "edges" : [ {
+      "from" : "D2",
+      "to" : "C",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 1,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D3",
+    "text" : "The use of terms such as 'numbskull' and 'dim-witted' transcends the bounds of fair political criticism and enters the realm of gratuitous personal insult, which is not protected by Article 10.",
+    "edges" : [ {
+      "from" : "D3",
+      "to" : "P1",
+      "relation" : "attack"
+    }, {
+      "from" : "D3",
+      "to" : "P3",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "weigh",
+    "round" : 1,
+    "argumentId" : "P1",
+    "category" : "public_interest",
+    "strength" : 0.7,
+    "baseScore" : 0.7,
+    "rationale" : "The applicant is a journalist commenting on local economic policy, which is a core area of public interest where the Court grants wide latitude to the press.",
+    "strengths" : {
+      "C" : 0.85,
+      "P1" : 0.7
+    },
+    "claimStrength" : 0.85,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 1,
+    "argumentId" : "P2",
+    "category" : "status_of_person",
+    "strength" : 0.8,
+    "baseScore" : 0.8,
+    "rationale" : "Public officials must tolerate a higher degree of scrutiny and more vigorous debate than private individuals, a well-established principle in Article 10 jurisprudence.",
+    "strengths" : {
+      "C" : 0.97,
+      "P1" : 0.7,
+      "P2" : 0.8
+    },
+    "claimStrength" : 0.97,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 1,
+    "argumentId" : "P3",
+    "category" : "content_and_form",
+    "strength" : 0.5,
+    "baseScore" : 0.5,
+    "rationale" : "While irony and hyperbole are protected, the Court distinguishes between 'robust' political commentary and 'gratuitous' insults; the strength depends on the specific choice of words.",
+    "strengths" : {
+      "C" : 0.985,
+      "P1" : 0.7,
+      "P2" : 0.8,
+      "P3" : 0.5
+    },
+    "claimStrength" : 0.985,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 1,
+    "argumentId" : "D1",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.6,
+    "baseScore" : 0.6,
+    "rationale" : "The interference was based on a clear domestic statute (Criminal Code), satisfying the 'prescribed by law' requirement.",
+    "strengths" : {
+      "C" : 0.685,
+      "P1" : 0.7,
+      "P2" : 0.8,
+      "P3" : 0.5,
+      "D1" : 0.6
+    },
+    "claimStrength" : 0.685,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 1,
+    "argumentId" : "D2",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.6,
+    "baseScore" : 0.6,
+    "rationale" : "Protection of reputation and dignity is a recognized legitimate aim, though it must be balanced against the public interest of the speech.",
+    "strengths" : {
+      "C" : 0.565,
+      "P1" : 0.7,
+      "P2" : 0.8,
+      "P3" : 0.5,
+      "D1" : 0.6,
+      "D2" : 0.6
+    },
+    "claimStrength" : 0.565,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 1,
+    "argumentId" : "D3",
+    "category" : "content_and_form",
+    "strength" : 0.8,
+    "baseScore" : 0.8,
+    "rationale" : "The Court often finds that terms like 'numbskull' or 'dim-witted' cross the line from criticizing a policy to attacking the personal dignity of the individual, which is not protected.",
+    "strengths" : {
+      "C" : 0.5026,
+      "P1" : 0.14,
+      "P2" : 0.8,
+      "P3" : 0.09999999999999998,
+      "D1" : 0.6,
+      "D2" : 0.6,
+      "D3" : 0.8
+    },
+    "claimStrength" : 0.5026,
+    "leading" : "violation"
+  }, {
+    "type" : "link",
+    "round" : 2,
+    "agent" : "prosecutor",
+    "side" : "applicant",
+    "argumentId" : "P1",
+    "edges" : [ {
+      "from" : "P1",
+      "to" : "D1",
+      "relation" : "attack"
+    }, {
+      "from" : "P1",
+      "to" : "D2",
+      "relation" : "attack"
+    } ],
+    "strengths" : {
+      "C" : 0.539728,
+      "P1" : 0.14,
+      "P2" : 0.8,
+      "P3" : 0.09999999999999998,
+      "D1" : 0.516,
+      "D2" : 0.516,
+      "D3" : 0.8
+    },
+    "claimStrength" : 0.539728,
+    "leading" : "violation"
+  }, {
+    "type" : "present",
+    "round" : 2,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D4",
+    "text" : "The domestic courts correctly identified that the applicant's actions were not motivated by a public interest debate but by a personal vendetta, evidenced by the recurring nature of the attacks and the specific choice of derogatory epithets.",
+    "edges" : [ {
+      "from" : "D4",
+      "to" : "P1",
+      "relation" : "attack"
+    }, {
+      "from" : "D4",
+      "to" : "P3",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 2,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D5",
+    "text" : "The severity of the language used, specifically terms like 'numbskull' and 'dim-witted', constitutes a clear violation of the limits of professional ethics and fair criticism as established in the domestic legal framework.",
+    "edges" : [ {
+      "from" : "D5",
+      "to" : "P3",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "weigh",
+    "round" : 2,
+    "argumentId" : "D4",
+    "category" : "prior_conduct",
+    "strength" : 0.8,
+    "baseScore" : 0.8,
+    "rationale" : "The Court often distinguishes between legitimate public interest debate and personal vendettas. The recurring nature of the attacks and the specific choice of insults strongly suggest a private motive, which significantly weakens the protection of the expression under Article 10.",
+    "strengths" : {
+      "C" : 0.49160512000000006,
+      "P1" : 0.028000000000000025,
+      "P2" : 0.8,
+      "P3" : 0.020000000000000018,
+      "D1" : 0.5831999999999999,
+      "D2" : 0.5831999999999999,
+      "D3" : 0.8,
+      "D4" : 0.8
+    },
+    "claimStrength" : 0.49160512000000006,
+    "leading" : "no_violation"
+  }, {
+    "type" : "weigh",
+    "round" : 2,
+    "argumentId" : "D5",
+    "category" : "content_and_form",
+    "strength" : 0.7,
+    "baseScore" : 0.7,
+    "rationale" : "While some polemical language is tolerated for public figures, the use of 'numbskull' and 'dim-witted' is highly derogatory. The Court balances the right to criticize against the preservation of human dignity, and such terms often cross the line into gratuitous insult.",
+    "strengths" : {
+      "C" : 0.49024432000000007,
+      "P1" : 0.028000000000000025,
+      "P2" : 0.8,
+      "P3" : 0.006000000000000005,
+      "D1" : 0.5831999999999999,
+      "D2" : 0.5831999999999999,
+      "D3" : 0.8,
+      "D4" : 0.8,
+      "D5" : 0.7
+    },
+    "claimStrength" : 0.49024432000000007,
+    "leading" : "no_violation"
+  }, {
+    "type" : "present",
+    "round" : 3,
+    "agent" : "prosecutor",
+    "side" : "applicant",
+    "argumentId" : "P4",
+    "text" : "The use of polemical language is a standard and necessary tool in political discourse, and the Court has consistently held that politicians must tolerate a higher degree of scrutiny and more robust expressions of opinion than private individuals.",
+    "edges" : [ {
+      "from" : "P4",
+      "to" : "D3",
+      "relation" : "attack"
+    }, {
+      "from" : "P4",
+      "to" : "D5",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 3,
+    "agent" : "prosecutor",
+    "side" : "applicant",
+    "argumentId" : "P5",
+    "text" : "The domestic courts' focus on the 'personal' nature of the conflict ignores the fact that the underlying subject matter—the efficacy of a local economic development project—is a matter of profound public interest.",
+    "edges" : [ {
+      "from" : "P5",
+      "to" : "D4",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 3,
+    "agent" : "prosecutor",
+    "side" : "applicant",
+    "argumentId" : "P6",
+    "text" : "The conviction is disproportionate because it criminalizes the use of figurative and hyperbolic language that, while sharp, is aimed at the competence of public officials rather than their private lives.",
+    "edges" : [ {
+      "from" : "P6",
+      "to" : "D1",
+      "relation" : "attack"
+    }, {
+      "from" : "P6",
+      "to" : "D2",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 3,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D6",
+    "text" : "The domestic courts correctly distinguished between the protection of reputation and the protection of dignity; while the applicant's words did not meet the threshold of defamation (Article 212), they clearly constituted an 'insult' (Article 216) which is a separate and legally distinct category of prohibited conduct.",
+    "edges" : [ {
+      "from" : "D6",
+      "to" : "P6",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 3,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D7",
+    "text" : "The severity of the epithets used, such as 'numbskull' and 'dim-witted', is such that they cannot be interpreted as mere figures of speech or political commentary, but rather as expressions intended solely to degrade the personal character of the officials.",
+    "edges" : [ {
+      "from" : "D7",
+      "to" : "P3",
+      "relation" : "attack"
+    }, {
+      "from" : "D7",
+      "to" : "P4",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "present",
+    "round" : 3,
+    "agent" : "defense",
+    "side" : "government",
+    "argumentId" : "D8",
+    "text" : "The recurring nature of the applicant's publications and the specific choice of derogatory language demonstrate a pattern of behavior aimed at causing moral harm rather than engaging in a constructive debate on public policy.",
+    "edges" : [ {
+      "from" : "D8",
+      "to" : "P5",
+      "relation" : "attack"
+    } ]
+  }, {
+    "type" : "weigh",
+    "round" : 3,
+    "argumentId" : "P4",
+    "category" : "content_and_form",
+    "strength" : 0.7,
+    "baseScore" : 0.7,
+    "rationale" : "The Court consistently recognizes that public figures must tolerate a higher degree of criticism and polemical language, especially in political contexts.",
+    "strengths" : {
+      "C" : 0.5235789472000001,
+      "P1" : 0.10640000000000005,
+      "P2" : 0.8,
+      "P3" : 0.06003999999999998,
+      "D1" : 0.53616,
+      "D2" : 0.53616,
+      "D3" : 0.2400000000000001,
+      "D4" : 0.8,
+      "D5" : 0.21000000000000002,
+      "P4" : 0.7
+    },
+    "claimStrength" : 0.5235789472000001,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 3,
+    "argumentId" : "P5",
+    "category" : "public_interest",
+    "strength" : 0.8,
+    "baseScore" : 0.8,
+    "rationale" : "The efficacy of local economic development projects is a matter of significant public interest, which generally grants wider protection to critical speech.",
+    "strengths" : {
+      "C" : 0.681833428608,
+      "P1" : 0.44687999999999994,
+      "P2" : 0.8,
+      "P3" : 0.25216799999999995,
+      "D1" : 0.331872,
+      "D2" : 0.331872,
+      "D3" : 0.2400000000000001,
+      "D4" : 0.15999999999999992,
+      "D5" : 0.21000000000000002,
+      "P4" : 0.7,
+      "P5" : 0.8
+    },
+    "claimStrength" : 0.681833428608,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 3,
+    "argumentId" : "P6",
+    "category" : "severity_of_sanction",
+    "strength" : 0.6,
+    "baseScore" : 0.6,
+    "rationale" : "Criminal sanctions for speech that targets professional competence rather than private life are often viewed as disproportionate by the Court.",
+    "strengths" : {
+      "C" : 0.83469823836672,
+      "P1" : 0.44687999999999994,
+      "P2" : 0.8,
+      "P3" : 0.25216799999999995,
+      "D1" : 0.13274880000000006,
+      "D2" : 0.13274880000000006,
+      "D3" : 0.2400000000000001,
+      "D4" : 0.15999999999999992,
+      "D5" : 0.21000000000000002,
+      "P4" : 0.7,
+      "P5" : 0.8,
+      "P6" : 0.6
+    },
+    "claimStrength" : 0.83469823836672,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 3,
+    "argumentId" : "D6",
+    "category" : "lawfulness_and_aim",
+    "strength" : 0.5,
+    "baseScore" : 0.5,
+    "rationale" : "Distinguishing between defamation and insult is a standard legal distinction, but the Court often scrutinizes whether 'insult' laws are used to stifle legitimate criticism.",
+    "strengths" : {
+      "C" : 0.75330957739008,
+      "P1" : 0.44687999999999994,
+      "P2" : 0.8,
+      "P3" : 0.25216799999999995,
+      "D1" : 0.23231039999999997,
+      "D2" : 0.23231039999999997,
+      "D3" : 0.2400000000000001,
+      "D4" : 0.15999999999999992,
+      "D5" : 0.21000000000000002,
+      "P4" : 0.7,
+      "P5" : 0.8,
+      "P6" : 0.3,
+      "D6" : 0.5
+    },
+    "claimStrength" : 0.75330957739008,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 3,
+    "argumentId" : "D7",
+    "category" : "content_and_form",
+    "strength" : 0.7,
+    "baseScore" : 0.7,
+    "rationale" : "The Court does set limits on 'gratuitous' insults that lack any connection to a public debate and are purely intended to degrade personal character.",
+    "strengths" : {
+      "C" : 0.6483034073161728,
+      "P1" : 0.21638400000000002,
+      "P2" : 0.8,
+      "P3" : 0.020726495999999983,
+      "D1" : 0.32911872000000003,
+      "D2" : 0.32911872000000003,
+      "D3" : 0.632,
+      "D4" : 0.15999999999999992,
+      "D5" : 0.5529999999999999,
+      "P4" : 0.21000000000000002,
+      "P5" : 0.8,
+      "P6" : 0.3,
+      "D6" : 0.5,
+      "D7" : 0.7
+    },
+    "claimStrength" : 0.6483034073161728,
+    "leading" : "violation"
+  }, {
+    "type" : "weigh",
+    "round" : 3,
+    "argumentId" : "D8",
+    "category" : "prior_conduct",
+    "strength" : 0.6,
+    "baseScore" : 0.6,
+    "rationale" : "A pattern of behavior and the choice of highly derogatory language can weigh against the protection of the speech if it appears to be a personal vendetta.",
+    "strengths" : {
+      "C" : 0.6107711644156231,
+      "P1" : 0.11746559999999984,
+      "P2" : 0.8,
+      "P3" : 0.011251526399999934,
+      "D1" : 0.3706644480000001,
+      "D2" : 0.3706644480000001,
+      "D3" : 0.632,
+      "D4" : 0.544,
+      "D5" : 0.5529999999999999,
+      "P4" : 0.21000000000000002,
+      "P5" : 0.32000000000000006,
+      "P6" : 0.3,
+      "D6" : 0.5,
+      "D7" : 0.7,
+      "D8" : 0.6
+    },
+    "claimStrength" : 0.6107711644156231,
+    "leading" : "violation"
+  }, {
+    "type" : "verdict",
+    "claimStrength" : 0.6107711644156231,
+    "strengths" : {
+      "C" : 0.6107711644156231,
+      "P1" : 0.11746559999999984,
+      "P2" : 0.8,
+      "P3" : 0.011251526399999934,
+      "D1" : 0.3706644480000001,
+      "D2" : 0.3706644480000001,
+      "D3" : 0.632,
+      "D4" : 0.544,
+      "D5" : 0.5529999999999999,
+      "P4" : 0.21000000000000002,
+      "P5" : 0.32000000000000006,
+      "P6" : 0.3,
+      "D6" : 0.5,
+      "D7" : 0.7,
+      "D8" : 0.6
+    },
+    "predicted" : "violation",
+    "actual" : "violation",
+    "semantics" : "DF-QuAD",
+    "alternatives" : {
+      "df-quad" : {
+        "name" : "DF-QuAD",
+        "claimStrength" : 0.6107711644156231,
+        "leading" : "violation"
+      },
+      "quad" : {
+        "name" : "QuAD",
+        "claimStrength" : 0.5553855822078116,
+        "leading" : "violation"
+      },
+      "euler" : {
+        "name" : "Euler-based",
+        "claimStrength" : 0.6256609409657272,
+        "leading" : "violation"
+      }
+    }
+  } ],
+  "transcript" : [ {
+    "round" : 1,
+    "argumentId" : "P1",
+    "side" : "applicant",
+    "text" : "The applicant, as a journalist and editor-in-chief, was exercising his right to provide a critical evaluation of public policy and the competence of local government officials, which is a core component of the freedom of expression protected by Article 10.",
+    "edges" : [ {
+      "from" : "P1",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 1,
+    "argumentId" : "P2",
+    "side" : "applicant",
+    "text" : "The officials involved are public figures who must tolerate a higher degree of criticism and more robust, even polemical, language than private individuals, especially when commenting on matters of public interest such as local economic development.",
+    "edges" : [ {
+      "from" : "P2",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 1,
+    "argumentId" : "P3",
+    "side" : "applicant",
+    "text" : "The use of irony and hyperbolic language, such as 'numbskull' or 'poser', serves as a tool of political commentary rather than a mere personal attack, intended to highlight the perceived lack of substance in the public administration's proposals.",
+    "edges" : [ {
+      "from" : "P3",
+      "to" : "C",
+      "relation" : "support"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 1,
+    "argumentId" : "D1",
+    "side" : "government",
+    "text" : "The domestic authorities' intervention was prescribed by law, as the Criminal Code clearly defines the limits of freedom of expression by prohibiting insults through the mass media to protect the dignity of individuals.",
+    "edges" : [ {
+      "from" : "D1",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 1,
+    "argumentId" : "D2",
+    "side" : "government",
+    "text" : "The interference pursued a legitimate aim by protecting the reputation and dignity of the officials, which is a recognized balancing point against the freedom of expression in the Court's case-law.",
+    "edges" : [ {
+      "from" : "D2",
+      "to" : "C",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 1,
+    "argumentId" : "D3",
+    "side" : "government",
+    "text" : "The use of terms such as 'numbskull' and 'dim-witted' transcends the bounds of fair political criticism and enters the realm of gratuitous personal insult, which is not protected by Article 10.",
+    "edges" : [ {
+      "from" : "D3",
+      "to" : "P1",
+      "relation" : "attack"
+    }, {
+      "from" : "D3",
+      "to" : "P3",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 2,
+    "argumentId" : "P1",
+    "side" : "applicant",
+    "text" : "The applicant, as a journalist and editor-in-chief, was exercising his right to provide a critical evaluation of public policy and the competence of local government officials, which is a core component of the freedom of expression protected by Article 10.",
+    "edges" : [ {
+      "from" : "P1",
+      "to" : "D1",
+      "relation" : "attack"
+    }, {
+      "from" : "P1",
+      "to" : "D2",
+      "relation" : "attack"
+    } ],
+    "reuse" : true,
+    "duplicateOf" : null
+  }, {
+    "round" : 2,
+    "argumentId" : "D4",
+    "side" : "government",
+    "text" : "The domestic courts correctly identified that the applicant's actions were not motivated by a public interest debate but by a personal vendetta, evidenced by the recurring nature of the attacks and the specific choice of derogatory epithets.",
+    "edges" : [ {
+      "from" : "D4",
+      "to" : "P1",
+      "relation" : "attack"
+    }, {
+      "from" : "D4",
+      "to" : "P3",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 2,
+    "argumentId" : "D5",
+    "side" : "government",
+    "text" : "The severity of the language used, specifically terms like 'numbskull' and 'dim-witted', constitutes a clear violation of the limits of professional ethics and fair criticism as established in the domestic legal framework.",
+    "edges" : [ {
+      "from" : "D5",
+      "to" : "P3",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 3,
+    "argumentId" : "P4",
+    "side" : "applicant",
+    "text" : "The use of polemical language is a standard and necessary tool in political discourse, and the Court has consistently held that politicians must tolerate a higher degree of scrutiny and more robust expressions of opinion than private individuals.",
+    "edges" : [ {
+      "from" : "P4",
+      "to" : "D3",
+      "relation" : "attack"
+    }, {
+      "from" : "P4",
+      "to" : "D5",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 3,
+    "argumentId" : "P5",
+    "side" : "applicant",
+    "text" : "The domestic courts' focus on the 'personal' nature of the conflict ignores the fact that the underlying subject matter—the efficacy of a local economic development project—is a matter of profound public interest.",
+    "edges" : [ {
+      "from" : "P5",
+      "to" : "D4",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 3,
+    "argumentId" : "P6",
+    "side" : "applicant",
+    "text" : "The conviction is disproportionate because it criminalizes the use of figurative and hyperbolic language that, while sharp, is aimed at the competence of public officials rather than their private lives.",
+    "edges" : [ {
+      "from" : "P6",
+      "to" : "D1",
+      "relation" : "attack"
+    }, {
+      "from" : "P6",
+      "to" : "D2",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 3,
+    "argumentId" : "D6",
+    "side" : "government",
+    "text" : "The domestic courts correctly distinguished between the protection of reputation and the protection of dignity; while the applicant's words did not meet the threshold of defamation (Article 212), they clearly constituted an 'insult' (Article 216) which is a separate and legally distinct category of prohibited conduct.",
+    "edges" : [ {
+      "from" : "D6",
+      "to" : "P6",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 3,
+    "argumentId" : "D7",
+    "side" : "government",
+    "text" : "The severity of the epithets used, such as 'numbskull' and 'dim-witted', is such that they cannot be interpreted as mere figures of speech or political commentary, but rather as expressions intended solely to degrade the personal character of the officials.",
+    "edges" : [ {
+      "from" : "D7",
+      "to" : "P3",
+      "relation" : "attack"
+    }, {
+      "from" : "D7",
+      "to" : "P4",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  }, {
+    "round" : 3,
+    "argumentId" : "D8",
+    "side" : "government",
+    "text" : "The recurring nature of the applicant's publications and the specific choice of derogatory language demonstrate a pattern of behavior aimed at causing moral harm rather than engaging in a constructive debate on public policy.",
+    "edges" : [ {
+      "from" : "D8",
+      "to" : "P5",
+      "relation" : "attack"
+    } ],
+    "reuse" : false,
+    "duplicateOf" : null
+  } ],
+  "timeline" : [ {
+    "round" : 1,
+    "arguments" : 6,
+    "claimStrength" : 0.5026,
+    "leading" : "violation"
+  }, {
+    "round" : 2,
+    "arguments" : 8,
+    "claimStrength" : 0.49024432000000007,
+    "leading" : "no_violation"
+  }, {
+    "round" : 3,
+    "arguments" : 14,
+    "claimStrength" : 0.6107711644156231,
+    "leading" : "violation"
+  } ],
+  "assessment" : [ {
+    "argument" : {
+      "id" : "P1",
+      "side" : "applicant",
+      "text" : "The applicant, as a journalist and editor-in-chief, was exercising his right to provide a critical evaluation of public policy and the competence of local government officials, which is a core component of the freedom of expression protected by Article 10."
+    },
+    "category" : "PUBLIC_INTEREST",
+    "strength" : 0.7,
+    "rationale" : "The applicant is a journalist commenting on local economic policy, which is a core area of public interest where the Court grants wide latitude to the press.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "P2",
+      "side" : "applicant",
+      "text" : "The officials involved are public figures who must tolerate a higher degree of criticism and more robust, even polemical, language than private individuals, especially when commenting on matters of public interest such as local economic development."
+    },
+    "category" : "STATUS_OF_PERSON",
+    "strength" : 0.8,
+    "rationale" : "Public officials must tolerate a higher degree of scrutiny and more vigorous debate than private individuals, a well-established principle in Article 10 jurisprudence.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "P3",
+      "side" : "applicant",
+      "text" : "The use of irony and hyperbolic language, such as 'numbskull' or 'poser', serves as a tool of political commentary rather than a mere personal attack, intended to highlight the perceived lack of substance in the public administration's proposals."
+    },
+    "category" : "CONTENT_AND_FORM",
+    "strength" : 0.5,
+    "rationale" : "While irony and hyperbole are protected, the Court distinguishes between 'robust' political commentary and 'gratuitous' insults; the strength depends on the specific choice of words.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D1",
+      "side" : "government",
+      "text" : "The domestic authorities' intervention was prescribed by law, as the Criminal Code clearly defines the limits of freedom of expression by prohibiting insults through the mass media to protect the dignity of individuals."
+    },
+    "category" : "LAWFULNESS_AND_AIM",
+    "strength" : 0.6,
+    "rationale" : "The interference was based on a clear domestic statute (Criminal Code), satisfying the 'prescribed by law' requirement.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D2",
+      "side" : "government",
+      "text" : "The interference pursued a legitimate aim by protecting the reputation and dignity of the officials, which is a recognized balancing point against the freedom of expression in the Court's case-law."
+    },
+    "category" : "LAWFULNESS_AND_AIM",
+    "strength" : 0.6,
+    "rationale" : "Protection of reputation and dignity is a recognized legitimate aim, though it must be balanced against the public interest of the speech.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D3",
+      "side" : "government",
+      "text" : "The use of terms such as 'numbskull' and 'dim-witted' transcends the bounds of fair political criticism and enters the realm of gratuitous personal insult, which is not protected by Article 10."
+    },
+    "category" : "CONTENT_AND_FORM",
+    "strength" : 0.8,
+    "rationale" : "The Court often finds that terms like 'numbskull' or 'dim-witted' cross the line from criticizing a policy to attacking the personal dignity of the individual, which is not protected.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D4",
+      "side" : "government",
+      "text" : "The domestic courts correctly identified that the applicant's actions were not motivated by a public interest debate but by a personal vendetta, evidenced by the recurring nature of the attacks and the specific choice of derogatory epithets."
+    },
+    "category" : "PRIOR_CONDUCT",
+    "strength" : 0.8,
+    "rationale" : "The Court often distinguishes between legitimate public interest debate and personal vendettas. The recurring nature of the attacks and the specific choice of insults strongly suggest a private motive, which significantly weakens the protection of the expression under Article 10.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D5",
+      "side" : "government",
+      "text" : "The severity of the language used, specifically terms like 'numbskull' and 'dim-witted', constitutes a clear violation of the limits of professional ethics and fair criticism as established in the domestic legal framework."
+    },
+    "category" : "CONTENT_AND_FORM",
+    "strength" : 0.7,
+    "rationale" : "While some polemical language is tolerated for public figures, the use of 'numbskull' and 'dim-witted' is highly derogatory. The Court balances the right to criticize against the preservation of human dignity, and such terms often cross the line into gratuitous insult.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "P4",
+      "side" : "applicant",
+      "text" : "The use of polemical language is a standard and necessary tool in political discourse, and the Court has consistently held that politicians must tolerate a higher degree of scrutiny and more robust expressions of opinion than private individuals."
+    },
+    "category" : "CONTENT_AND_FORM",
+    "strength" : 0.7,
+    "rationale" : "The Court consistently recognizes that public figures must tolerate a higher degree of criticism and polemical language, especially in political contexts.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "P5",
+      "side" : "applicant",
+      "text" : "The domestic courts' focus on the 'personal' nature of the conflict ignores the fact that the underlying subject matter—the efficacy of a local economic development project—is a matter of profound public interest."
+    },
+    "category" : "PUBLIC_INTEREST",
+    "strength" : 0.8,
+    "rationale" : "The efficacy of local economic development projects is a matter of significant public interest, which generally grants wider protection to critical speech.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "P6",
+      "side" : "applicant",
+      "text" : "The conviction is disproportionate because it criminalizes the use of figurative and hyperbolic language that, while sharp, is aimed at the competence of public officials rather than their private lives."
+    },
+    "category" : "SEVERITY_OF_SANCTION",
+    "strength" : 0.6,
+    "rationale" : "Criminal sanctions for speech that targets professional competence rather than private life are often viewed as disproportionate by the Court.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D6",
+      "side" : "government",
+      "text" : "The domestic courts correctly distinguished between the protection of reputation and the protection of dignity; while the applicant's words did not meet the threshold of defamation (Article 212), they clearly constituted an 'insult' (Article 216) which is a separate and legally distinct category of prohibited conduct."
+    },
+    "category" : "LAWFULNESS_AND_AIM",
+    "strength" : 0.5,
+    "rationale" : "Distinguishing between defamation and insult is a standard legal distinction, but the Court often scrutinizes whether 'insult' laws are used to stifle legitimate criticism.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D7",
+      "side" : "government",
+      "text" : "The severity of the epithets used, such as 'numbskull' and 'dim-witted', is such that they cannot be interpreted as mere figures of speech or political commentary, but rather as expressions intended solely to degrade the personal character of the officials."
+    },
+    "category" : "CONTENT_AND_FORM",
+    "strength" : 0.7,
+    "rationale" : "The Court does set limits on 'gratuitous' insults that lack any connection to a public debate and are purely intended to degrade personal character.",
+    "duplicateOf" : null
+  }, {
+    "argument" : {
+      "id" : "D8",
+      "side" : "government",
+      "text" : "The recurring nature of the applicant's publications and the specific choice of derogatory language demonstrate a pattern of behavior aimed at causing moral harm rather than engaging in a constructive debate on public policy."
+    },
+    "category" : "PRIOR_CONDUCT",
+    "strength" : 0.6,
+    "rationale" : "A pattern of behavior and the choice of highly derogatory language can weigh against the protection of the speech if it appears to be a personal vendetta.",
+    "duplicateOf" : null
+  } ],
+  "pruned" : { },
+  "claimStrength" : 0.6107711644156231,
+  "strengths" : {
+    "C" : 0.6107711644156231,
+    "P1" : 0.11746559999999984,
+    "P2" : 0.8,
+    "P3" : 0.011251526399999934,
+    "D1" : 0.3706644480000001,
+    "D2" : 0.3706644480000001,
+    "D3" : 0.632,
+    "D4" : 0.544,
+    "D5" : 0.5529999999999999,
+    "P4" : 0.21000000000000002,
+    "P5" : 0.32000000000000006,
+    "P6" : 0.3,
+    "D6" : 0.5,
+    "D7" : 0.7,
+    "D8" : 0.6
+  },
+  "predicted" : "violation",
+  "actual" : "violation",
+  "semantics" : "DF-QuAD",
+  "alternatives" : {
+    "df-quad" : {
+      "name" : "DF-QuAD",
+      "claimStrength" : 0.6107711644156231,
+      "leading" : "violation"
+    },
+    "quad" : {
+      "name" : "QuAD",
+      "claimStrength" : 0.5553855822078116,
+      "leading" : "violation"
+    },
+    "euler" : {
+      "name" : "Euler-based",
+      "claimStrength" : 0.6256609409657272,
+      "leading" : "violation"
+    }
+  },
+  "comparison" : {
+    "actual" : "violation",
+    "simulated" : {
+      "predicted" : "violation",
+      "claimStrength" : 0.6107711644156231,
+      "margin" : 0.11077116441562307,
+      "arguments" : {
+        "applicant" : 6,
+        "government" : 8
+      },
+      "attacks" : 18,
+      "supports" : 3,
+      "maxDepth" : 4,
+      "multiTarget" : 6,
+      "baseScoreByCategory" : {
+        "applicant" : {
+          "content_and_form" : 1.2,
+          "public_interest" : 1.5,
+          "severity_of_sanction" : 0.6,
+          "status_of_person" : 0.8
+        },
+        "government" : {
+          "content_and_form" : 2.2,
+          "lawfulness_and_aim" : 1.7,
+          "prior_conduct" : 1.4
+        }
+      }
+    },
+    "recorded" : {
+      "predicted" : "violation",
+      "claimStrength" : 0.999733732123757,
+      "margin" : 0.49973373212375705,
+      "arguments" : {
+        "applicant" : 9,
+        "government" : 6
+      },
+      "attacks" : 60,
+      "supports" : 60,
+      "maxDepth" : 1,
+      "multiTarget" : 14,
+      "baseScoreByCategory" : {
+        "applicant" : {
+          "content_and_form" : 1.9,
+          "public_interest" : 0.8,
+          "severity_of_sanction" : 1.3,
+          "status_of_person" : 0.9,
+          "truth_and_verification" : 0.6
+        },
+        "government" : {
+          "content_and_form" : 0.5,
+          "lawfulness_and_aim" : 0.7,
+          "other" : 1.6,
+          "severity_of_sanction" : 0.7
+        }
+      }
+    },
+    "simulatedMatchesActual" : true,
+    "simulatedMatchesRecorded" : true,
+    "leaderChangedInRounds" : [ 2, 3 ],
+    "settledFromRound" : 3
+  },
+  "graph" : {
+    "caseId" : "001-164453",
+    "title" : "Ziembiński v. Poland (No. 2)",
+    "claim" : "The interference with the applicant's freedom of expression violated Article 10 of the Convention.",
+    "actualOutcome" : "violation",
+    "predictedOutcome" : "violation",
+    "claimStrength" : 0.6107711644156231,
+    "arguments" : [ {
+      "id" : "P1",
+      "side" : "applicant",
+      "text" : "The applicant, as a journalist and editor-in-chief, was exercising his right to provide a critical evaluation of public policy and the competence of local government officials, which is a core component of the freedom of expression protected by Article 10.",
+      "category" : "public_interest",
+      "strength" : 0.7,
+      "baseScore" : 0.7,
+      "finalStrength" : 0.11746559999999984,
+      "edges" : [ {
+        "from" : "P1",
+        "to" : "C",
+        "relation" : "support"
+      }, {
+        "from" : "P1",
+        "to" : "D1",
+        "relation" : "attack"
+      }, {
+        "from" : "P1",
+        "to" : "D2",
+        "relation" : "attack"
+      } ],
+      "depth" : 1,
+      "rationale" : "The applicant is a journalist commenting on local economic policy, which is a core area of public interest where the Court grants wide latitude to the press."
+    }, {
+      "id" : "P2",
+      "side" : "applicant",
+      "text" : "The officials involved are public figures who must tolerate a higher degree of criticism and more robust, even polemical, language than private individuals, especially when commenting on matters of public interest such as local economic development.",
+      "category" : "status_of_person",
+      "strength" : 0.8,
+      "baseScore" : 0.8,
+      "finalStrength" : 0.8,
+      "edges" : [ {
+        "from" : "P2",
+        "to" : "C",
+        "relation" : "support"
+      } ],
+      "depth" : 1,
+      "rationale" : "Public officials must tolerate a higher degree of scrutiny and more vigorous debate than private individuals, a well-established principle in Article 10 jurisprudence."
+    }, {
+      "id" : "P3",
+      "side" : "applicant",
+      "text" : "The use of irony and hyperbolic language, such as 'numbskull' or 'poser', serves as a tool of political commentary rather than a mere personal attack, intended to highlight the perceived lack of substance in the public administration's proposals.",
+      "category" : "content_and_form",
+      "strength" : 0.5,
+      "baseScore" : 0.5,
+      "finalStrength" : 0.011251526399999934,
+      "edges" : [ {
+        "from" : "P3",
+        "to" : "C",
+        "relation" : "support"
+      } ],
+      "depth" : 1,
+      "rationale" : "While irony and hyperbole are protected, the Court distinguishes between 'robust' political commentary and 'gratuitous' insults; the strength depends on the specific choice of words."
+    }, {
+      "id" : "D1",
+      "side" : "government",
+      "text" : "The domestic authorities' intervention was prescribed by law, as the Criminal Code clearly defines the limits of freedom of expression by prohibiting insults through the mass media to protect the dignity of individuals.",
+      "category" : "lawfulness_and_aim",
+      "strength" : 0.6,
+      "baseScore" : 0.6,
+      "finalStrength" : 0.3706644480000001,
+      "edges" : [ {
+        "from" : "D1",
+        "to" : "C",
+        "relation" : "attack"
+      } ],
+      "depth" : 1,
+      "rationale" : "The interference was based on a clear domestic statute (Criminal Code), satisfying the 'prescribed by law' requirement."
+    }, {
+      "id" : "D2",
+      "side" : "government",
+      "text" : "The interference pursued a legitimate aim by protecting the reputation and dignity of the officials, which is a recognized balancing point against the freedom of expression in the Court's case-law.",
+      "category" : "lawfulness_and_aim",
+      "strength" : 0.6,
+      "baseScore" : 0.6,
+      "finalStrength" : 0.3706644480000001,
+      "edges" : [ {
+        "from" : "D2",
+        "to" : "C",
+        "relation" : "attack"
+      } ],
+      "depth" : 1,
+      "rationale" : "Protection of reputation and dignity is a recognized legitimate aim, though it must be balanced against the public interest of the speech."
+    }, {
+      "id" : "D3",
+      "side" : "government",
+      "text" : "The use of terms such as 'numbskull' and 'dim-witted' transcends the bounds of fair political criticism and enters the realm of gratuitous personal insult, which is not protected by Article 10.",
+      "category" : "content_and_form",
+      "strength" : 0.8,
+      "baseScore" : 0.8,
+      "finalStrength" : 0.632,
+      "edges" : [ {
+        "from" : "D3",
+        "to" : "P1",
+        "relation" : "attack"
+      }, {
+        "from" : "D3",
+        "to" : "P3",
+        "relation" : "attack"
+      } ],
+      "depth" : 2,
+      "rationale" : "The Court often finds that terms like 'numbskull' or 'dim-witted' cross the line from criticizing a policy to attacking the personal dignity of the individual, which is not protected."
+    }, {
+      "id" : "D4",
+      "side" : "government",
+      "text" : "The domestic courts correctly identified that the applicant's actions were not motivated by a public interest debate but by a personal vendetta, evidenced by the recurring nature of the attacks and the specific choice of derogatory epithets.",
+      "category" : "prior_conduct",
+      "strength" : 0.8,
+      "baseScore" : 0.8,
+      "finalStrength" : 0.544,
+      "edges" : [ {
+        "from" : "D4",
+        "to" : "P1",
+        "relation" : "attack"
+      }, {
+        "from" : "D4",
+        "to" : "P3",
+        "relation" : "attack"
+      } ],
+      "depth" : 2,
+      "rationale" : "The Court often distinguishes between legitimate public interest debate and personal vendettas. The recurring nature of the attacks and the specific choice of insults strongly suggest a private motive, which significantly weakens the protection of the expression under Article 10."
+    }, {
+      "id" : "D5",
+      "side" : "government",
+      "text" : "The severity of the language used, specifically terms like 'numbskull' and 'dim-witted', constitutes a clear violation of the limits of professional ethics and fair criticism as established in the domestic legal framework.",
+      "category" : "content_and_form",
+      "strength" : 0.7,
+      "baseScore" : 0.7,
+      "finalStrength" : 0.5529999999999999,
+      "edges" : [ {
+        "from" : "D5",
+        "to" : "P3",
+        "relation" : "attack"
+      } ],
+      "depth" : 2,
+      "rationale" : "While some polemical language is tolerated for public figures, the use of 'numbskull' and 'dim-witted' is highly derogatory. The Court balances the right to criticize against the preservation of human dignity, and such terms often cross the line into gratuitous insult."
+    }, {
+      "id" : "P4",
+      "side" : "applicant",
+      "text" : "The use of polemical language is a standard and necessary tool in political discourse, and the Court has consistently held that politicians must tolerate a higher degree of scrutiny and more robust expressions of opinion than private individuals.",
+      "category" : "content_and_form",
+      "strength" : 0.7,
+      "baseScore" : 0.7,
+      "finalStrength" : 0.21000000000000002,
+      "edges" : [ {
+        "from" : "P4",
+        "to" : "D3",
+        "relation" : "attack"
+      }, {
+        "from" : "P4",
+        "to" : "D5",
+        "relation" : "attack"
+      } ],
+      "depth" : 3,
+      "rationale" : "The Court consistently recognizes that public figures must tolerate a higher degree of criticism and polemical language, especially in political contexts."
+    }, {
+      "id" : "P5",
+      "side" : "applicant",
+      "text" : "The domestic courts' focus on the 'personal' nature of the conflict ignores the fact that the underlying subject matter—the efficacy of a local economic development project—is a matter of profound public interest.",
+      "category" : "public_interest",
+      "strength" : 0.8,
+      "baseScore" : 0.8,
+      "finalStrength" : 0.32000000000000006,
+      "edges" : [ {
+        "from" : "P5",
+        "to" : "D4",
+        "relation" : "attack"
+      } ],
+      "depth" : 3,
+      "rationale" : "The efficacy of local economic development projects is a matter of significant public interest, which generally grants wider protection to critical speech."
+    }, {
+      "id" : "P6",
+      "side" : "applicant",
+      "text" : "The conviction is disproportionate because it criminalizes the use of figurative and hyperbolic language that, while sharp, is aimed at the competence of public officials rather than their private lives.",
+      "category" : "severity_of_sanction",
+      "strength" : 0.6,
+      "baseScore" : 0.6,
+      "finalStrength" : 0.3,
+      "edges" : [ {
+        "from" : "P6",
+        "to" : "D1",
+        "relation" : "attack"
+      }, {
+        "from" : "P6",
+        "to" : "D2",
+        "relation" : "attack"
+      } ],
+      "depth" : 2,
+      "rationale" : "Criminal sanctions for speech that targets professional competence rather than private life are often viewed as disproportionate by the Court."
+    }, {
+      "id" : "D6",
+      "side" : "government",
+      "text" : "The domestic courts correctly distinguished between the protection of reputation and the protection of dignity; while the applicant's words did not meet the threshold of defamation (Article 212), they clearly constituted an 'insult' (Article 216) which is a separate and legally distinct category of prohibited conduct.",
+      "category" : "lawfulness_and_aim",
+      "strength" : 0.5,
+      "baseScore" : 0.5,
+      "finalStrength" : 0.5,
+      "edges" : [ {
+        "from" : "D6",
+        "to" : "P6",
+        "relation" : "attack"
+      } ],
+      "depth" : 3,
+      "rationale" : "Distinguishing between defamation and insult is a standard legal distinction, but the Court often scrutinizes whether 'insult' laws are used to stifle legitimate criticism."
+    }, {
+      "id" : "D7",
+      "side" : "government",
+      "text" : "The severity of the epithets used, such as 'numbskull' and 'dim-witted', is such that they cannot be interpreted as mere figures of speech or political commentary, but rather as expressions intended solely to degrade the personal character of the officials.",
+      "category" : "content_and_form",
+      "strength" : 0.7,
+      "baseScore" : 0.7,
+      "finalStrength" : 0.7,
+      "edges" : [ {
+        "from" : "D7",
+        "to" : "P3",
+        "relation" : "attack"
+      }, {
+        "from" : "D7",
+        "to" : "P4",
+        "relation" : "attack"
+      } ],
+      "depth" : 2,
+      "rationale" : "The Court does set limits on 'gratuitous' insults that lack any connection to a public debate and are purely intended to degrade personal character."
+    }, {
+      "id" : "D8",
+      "side" : "government",
+      "text" : "The recurring nature of the applicant's publications and the specific choice of derogatory language demonstrate a pattern of behavior aimed at causing moral harm rather than engaging in a constructive debate on public policy.",
+      "category" : "prior_conduct",
+      "strength" : 0.6,
+      "baseScore" : 0.6,
+      "finalStrength" : 0.6,
+      "edges" : [ {
+        "from" : "D8",
+        "to" : "P5",
+        "relation" : "attack"
+      } ],
+      "depth" : 4,
+      "rationale" : "A pattern of behavior and the choice of highly derogatory language can weigh against the protection of the speech if it appears to be a personal vendetta."
+    } ],
+    "pruned" : [ ]
+  }
+}

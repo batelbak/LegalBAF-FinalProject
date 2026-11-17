@@ -36,6 +36,14 @@ export function fillEntry(el, text) {
   record().scrollTop = record().scrollHeight;
 }
 
+/** מסמן את הרשומה של טיעון שמוזג אל טיעון קודם. */
+export function markPruned(argumentId, into) {
+  const el = record().querySelector(`.entry[data-id="${CSS.escape(argumentId)}"]`);
+  if (!el) return;
+  el.classList.add('pruned');
+  el.querySelector('.entry-head').insertAdjacentHTML('beforeend', ` <span class="merged">merged into ${escapeHtml(into)}</span>`);
+}
+
 export function addNotice(head, text) {
   return addEntry('notice', head, null, escapeHtml(text));
 }

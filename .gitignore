@@ -4,3 +4,7 @@ target/
 .venv/
 __pycache__/
 .env
+
+# Word lock files and local backups
+~$*
+data/local/*/_before-relink/

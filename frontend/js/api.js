@@ -41,8 +41,9 @@ export const api = {
   cases: () => request('GET', '/cases'),
   caseDetails: caseId => request('GET', `/cases/${id(caseId)}`),
   /** מצב א': הטענות האמיתיות מפסק הדין והשקילה של השופט, כרצף אירועים. */
-  hearing: caseId => request('GET', `/cases/${id(caseId)}/hearing`),
+  hearing: (caseId, demo = false) => request('GET', `/cases/${id(caseId)}/hearing${demo ? '?demo=true' : ''}`),
   tippingPoints: caseId => request('GET', `/cases/${id(caseId)}/tipping-points`),
-  startSimulation: (caseId, rounds) => request('POST', '/simulations', { caseId, rounds }),
+  /** demo: סוכנים ושופט מזויפים בשרת — בלי מודל, בלי ניתוח אמיתי, לא נשמר. */
+  startSimulation: (caseId, rounds, demo = false) => request('POST', '/simulations', { caseId, rounds, demo }),
   counterArguments: (caseId, side, text) => request('POST', '/strategy', { caseId, side, text }),
 };

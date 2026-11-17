@@ -3,69 +3,86 @@ package ac.qbaf.legalsim;
 import ac.qbaf.legalsim.agents.DefenseAgent;
 import ac.qbaf.legalsim.agents.JudgeAgent;
 import ac.qbaf.legalsim.agents.JudgeAgent.ScoredArgument;
+import ac.qbaf.legalsim.agents.PartyAgent.Submission;
 import ac.qbaf.legalsim.agents.ProsecutorAgent;
 import ac.qbaf.legalsim.data.CaseLoader;
 import ac.qbaf.legalsim.data.LegalCase;
+import ac.qbaf.legalsim.llm.Llm;
 import ac.qbaf.legalsim.qbaf.QbafGraph;
+import ac.qbaf.legalsim.qbaf.QbafSemantics.Ruling;
 import ac.qbaf.legalsim.report.GraphReport;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
+import ac.qbaf.legalsim.simulation.RecordedHearing;
+import ac.qbaf.legalsim.simulation.SimulationStore;
 
 import java.io.IOException;
-import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
- * מצב א': הטענות האמיתיות מפסק הדין, בלי סימולציה.
- * סוכן התביעה מכניס לגרף את טענות המבקש וסוכן ההגנה את טענות הממשלה. השופט שוקל את הקשתות ומכריע.
- * ההערכה של השופט נשמרת ב-data/assessments כדי לא לשלם עליה שוב.
+ * מצב א': הטענות האמיתיות מפסק הדין, בלי סימולציה, כגרף QBAF.
+ * <ol>
+ *   <li>מבנה: כל סוכן קובע לכל טענה של הצד שלו על מה היא עונה — C ו/או טענות קודמות (נשמר ב-structures).</li>
+ *   <li>הסוכנים מכניסים את הטענות לגרף לסירוגין, עם קשתות התקפה ותמיכה לפי המבנה.</li>
+ *   <li>השופט קובע ציון בסיס לכל טענה ומסמן כפילויות (נשמר ב-assessments). כפילויות ממוזגות,
+ *   וההכרעה מחושבת בסמנטיקה שנבחרה (ברירת מחדל DF-QuAD).</li>
+ * </ol>
+ * הכול נשמר בתיקיית התוצאות של המודל (Llm.resultsDir) כדי לא להריץ שוב.
  * mvn compile exec:java -Dexec.mainClass=ac.qbaf.legalsim.RealGraphRun -Dexec.args=001-164453
  */
 public final class RealGraphRun {
-    private static final ObjectMapper JSON = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
     public static void main(String[] args) throws IOException {
-        List<String> ids = args.length > 0 ? List.of(args) : CaseLoader.SAMPLE_IDS;
+        List<String> ids = java.util.Arrays.stream(args).filter(a -> !a.isBlank()).toList();
+        if (ids.isEmpty()) {
+            ids = CaseLoader.SAMPLE_IDS;
+        }
         CaseLoader loader = new CaseLoader();
         ProsecutorAgent prosecutor = new ProsecutorAgent();
         DefenseAgent defense = new DefenseAgent();
         JudgeAgent judge = new JudgeAgent();
+        Path results = Llm.resultsDir(Path.of("data"));
+        SimulationStore store = new SimulationStore(results);
+        System.out.println("Model: " + Llm.model() + "  results: " + results.toAbsolutePath());
 
         for (String id : ids) {
             LegalCase legalCase = loader.load(id);
-            QbafGraph graph = LegalCase.emptyGraph();
-            prosecutor.presentSubmissions(graph, legalCase);
-            defense.presentSubmissions(graph, legalCase);
 
-            List<ScoredArgument> scored = assessment(judge, legalCase, graph);
-            judge.weigh(graph, scored, Map.of());
-            Map<String, Object> decision = judge.decide(graph);
+            Map<String, List<String>> structure = store.structure(id);
+            if (structure == null) {
+                System.out.println(id + "  linking the submissions into a graph...");
+                List<Submission> order = RecordedHearing.order(legalCase);
+                structure = new LinkedHashMap<>();
+                structure.putAll(prosecutor.linkSubmissions(legalCase.facts(), order));
+                structure.putAll(defense.linkSubmissions(legalCase.facts(), order));
+                structure = RecordedHearing.acyclic(order, structure);
+                store.saveStructure(id, structure);
+            }
+            QbafGraph graph = RecordedHearing.graph(legalCase, structure);
 
-            @SuppressWarnings("unchecked")
-            Map<String, Double> scores = (Map<String, Double>) decision.get("scores");
-            String predicted = (String) decision.get("leading");
-            Path html = GraphReport.write(Path.of("data", "graphs"),
-                    GraphReport.build(legalCase, scored, graph, scores, predicted));
+            List<ScoredArgument> scored = store.recordedAssessment(id);
+            if (scored == null) {
+                System.out.println(id + "  the judge is scoring " + graph.partyArguments().size() + " arguments...");
+                scored = judge.assess(legalCase.facts(), JudgeAgent.argumentsIn(graph), graph);
+                store.saveAssessment(id, scored);
+            }
+            // מחילים את ההערכה: כפילויות ממוזגות, ולכל שאר הטענות נקבע ציון בסיס
+            RecordedHearing.Built built = RecordedHearing.build(legalCase, scored, structure);
+            QbafGraph weighed = built.graph();
+            Ruling ruling = judge.decide(weighed);
 
-            System.out.printf("%s  predicted=%s  actual=%s  scores=%s%n  %s%n",
-                    id, predicted, legalCase.outcome(), scores, html.toAbsolutePath());
+            Path html = GraphReport.write(results.resolve("graphs"),
+                    GraphReport.build(legalCase, scored, weighed, ruling));
+            long between = weighed.edges().stream().filter(e -> !QbafGraph.CLAIM.equals(e.to())).count();
+            System.out.printf("%s  predicted=%s  actual=%s  sigma(C)=%.3f  (%d arguments, %d edges between arguments, %d merged as duplicates)%n  %s%n",
+                    id, ruling.leading(), legalCase.outcome(), ruling.claimStrength(),
+                    weighed.partyArguments().size(), between, built.pruned().size(), html.toAbsolutePath());
+            Map<String, Map<Integer, Integer>> layers = new java.util.TreeMap<>();
+            weighed.partyArguments().forEach(a -> layers.computeIfAbsent(a.side(), s -> new java.util.TreeMap<>())
+                    .merge(weighed.depth(a.id()), 1, Integer::sum));
+            System.out.println("  arguments per layer (1 = answers C directly): " + layers);
         }
-    }
-
-    private static List<ScoredArgument> assessment(JudgeAgent judge, LegalCase legalCase, QbafGraph graph)
-            throws IOException {
-        Path path = Path.of("data", "assessments", legalCase.id() + ".json");
-        if (Files.exists(path)) {
-            return JSON.readValue(path.toFile(), new TypeReference<>() {
-            });
-        }
-        List<ScoredArgument> scored = judge.assess(legalCase.facts(), JudgeAgent.argumentsIn(graph));
-        Files.createDirectories(path.getParent());
-        JSON.writeValue(path.toFile(), scored);
-        return scored;
     }
 
     private RealGraphRun() {

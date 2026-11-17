@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.concurrent.Executors;
 
 /**
  * השרת של האתר: מגיש את הפרונטאנד (תיקיית frontend) ואת ה-API (/api).
@@ -27,6 +28,8 @@ public final class WebServer {
         HttpServer server = HttpServer.create(new InetSocketAddress("localhost", port), 0);
         server.createContext("/api/", new ApiHandler(new CaseService(Path.of("data"))));
         server.createContext("/", new StaticFileHandler(frontend));
+        // סימולציה יכולה לקחת כמה דקות; בלי executor השרת היה חסום לכל בקשה אחרת בזמן הזה
+        server.setExecutor(Executors.newCachedThreadPool());
         server.start();
         System.out.println("LegalBAF is running at http://localhost:" + port);
     }

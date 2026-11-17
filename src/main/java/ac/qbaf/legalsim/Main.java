@@ -1,14 +1,11 @@
 package ac.qbaf.legalsim;
 
-import ac.qbaf.legalsim.simulation.TrialSimulation;
+import java.io.IOException;
 
-/**
- * נקודת כניסה לשלד — לא מריצה סימולציה עדיין.
- */
+/** נקודת כניסה: מריצה את הסימולציה האדברסרית (ראו SimulationRun). */
 public final class Main {
-    public static void main(String[] args) {
-        TrialSimulation trial = new TrialSimulation();
-        trial.run();
+    public static void main(String[] args) throws IOException {
+        SimulationRun.main(args);
     }
 
     private Main() {

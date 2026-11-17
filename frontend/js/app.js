@@ -3,19 +3,20 @@ import { api } from './api.js';
 import { VIOLATION, categoryLabel, escapeHtml, fmt, summaryOf, titleHtml } from './format.js';
 import { HearingPlayer } from './hearing.js';
 import { renderGraph } from './graph.js';
-import { addEntry, addNotice, addRoundMark, clearRecord, fillEntry, focusEntry } from './record.js';
+import { addEntry, addNotice, addRoundMark, clearRecord, fillEntry, focusEntry, markPruned } from './record.js';
 import {
   clearVerdict, pendingTip, renderAssessment, renderBalance, renderTimeline, resetAssessment, setTips, showVerdict,
 } from './bench.js';
 
 const $ = id => document.getElementById(id);
 
-const INTRO = 'The prosecution agent opens for the applicant. The defence agent answers for the Government. '
-  + 'Each argument is entered into the graph by the agent who raised it; only the bench sets the weights.';
+const INTRO = 'The prosecution agent argues for the applicant, the defence agent for the Government. '
+  + 'Each argument attacks or supports the claim C or an earlier argument; only the bench scores them.';
 
 let caseId = null;
 let userSide = 'applicant';
 let eventsLoaded = false;
+let loadedDemo = false;
 
 // ---------- view: מה שהנגן מצייר ----------
 const view = {
@@ -24,10 +25,22 @@ const view = {
     addRoundMark(`Round ${n}`);
   },
   drafting(event) {
-    const prosecution = event.decision === VIOLATION;
+    const prosecution = event.side === 'applicant';
     const el = addEntry(prosecution ? 'pros' : 'def',
-      prosecution ? 'Prosecution agent · Applicant' : 'Defence agent · Government', event.argumentId, null);
+      `${agentName(event.side)} · ${edgesText(event.edges)}`, event.argumentId, null);
     return { fill: () => fillEntry(el, event.text) };
+  },
+  linking(event) {
+    addEntry(event.side === 'applicant' ? 'pros' : 'def', `${agentName(event.side)} · reuses`, event.argumentId,
+      `The same argument now also ${escapeHtml(edgesText(event.edges))}. It stays one node, so it is not counted twice.`);
+  },
+  pruning(event) {
+    markPruned(event.argumentId, event.duplicateOf);
+    const moved = event.edges.length
+      ? ` Its links moved to ${escapeHtml(event.duplicateOf)}: ${escapeHtml(event.edges.map(e => `${e.from} ${e.relation}s ${e.to}`).join(', '))}.`
+      : '';
+    addEntry('ruling', 'Bench · duplicate', event.argumentId,
+      `Restates <span class="mono">${escapeHtml(event.duplicateOf)}</span>, so it is merged into it and not counted twice.${moved} — ${escapeHtml(event.rationale || '')}`);
   },
   update(hearing, enterId) {
     renderGraph($('graph'), hearing, { enterId, onSelect: focusEntry });
@@ -36,12 +49,15 @@ const view = {
   },
   ruling(event) {
     addEntry('ruling', 'Bench', event.argumentId,
-      `${escapeHtml(categoryLabel(event.category))} · strength <span class="mono">${fmt(event.strength)}</span> — ${escapeHtml(event.rationale)}`);
+      `${escapeHtml(categoryLabel(event.category))} · τ <span class="mono">${fmt(event.baseScore)}</span> · σ <span class="mono">${fmt(event.strengths?.[event.argumentId])}</span> — ${escapeHtml(event.rationale)}`);
     renderAssessment(event);
   },
   status: setStatus,
   close(hearing) {
     showVerdict($('graph-wrap'), hearing.verdict);
+    if (loadedDemo) {
+      document.querySelector('#graph-wrap .verdict-k').textContent = 'Demo data · not a real judgment';
+    }
     setStatus('Hearing closed · judgment delivered', 'done');
     $('round-note').textContent = 'Closed';
     loadTippingPoints();
@@ -49,6 +65,10 @@ const view = {
 };
 
 const player = new HearingPlayer(view);
+
+const agentName = side => side === 'applicant' ? 'Prosecution agent · Applicant' : 'Defence agent · Government';
+/** "attacks D1, supports C" */
+const edgesText = edges => edges.map(e => `${e.relation === 'attack' ? 'attacks' : 'supports'} ${e.to}`).join(', ');
 
 function setStatus(text, cls = '') {
   $('status-text').textContent = text;
@@ -74,12 +94,17 @@ function syncButtons() {
 // ---------- case ----------
 async function loadCases() {
   try {
-    await api.health();
-    setServer(true, 'Server online · stage A');
+    const health = await api.health();
+    const ready = health.modelAvailable;
+    setServer(true, health.model ? `Server online · ${health.model}${ready ? '' : ' (not running)'}` : 'Server online');
+    $('engine').options[0].textContent = `Model · ${health.model || 'LLM'}${ready ? '' : ' (not running)'}`;
+    // בלי מודל זמין, ברירת המחדל היא נתוני הדגמה, כדי שיהיה מה לראות
+    $('engine').value = ready ? 'model' : 'demo';
+    $('graph-note').textContent = `QBAF · attack and support edges · node value = final strength σ (${health.semantics || 'DF-QuAD'})`;
   } catch {
     setServer(false, 'Server offline');
     $('case-title').textContent = 'The server is not running';
-    $('case-summary').textContent = 'Start it from the project folder: mvn compile exec:java -Dexec.mainClass=ac.qbaf.legalsim.web.WebServer';
+    $('case-summary').textContent = 'Start it from the project folder with run-local.cmd';
     return;
   }
   const cases = await api.cases();
@@ -117,24 +142,48 @@ function reset() {
 
 // ---------- hearing ----------
 /** טוען את אירועי הדיון לפי המצב שנבחר. מחזיר false אם השרת לא סיפק דיון. */
-async function ensureEvents() {
-  if (eventsLoaded) return true;
-  setStatus('Opening the hearing…', 'live');
+let loadingEvents = null;
+
+function ensureEvents() {
+  if (eventsLoaded) return Promise.resolve(true);
+  // סימולציה חדשה עולה כסף ולוקחת דקות: לחיצה נוספת בזמן הטעינה מחכה לאותה בקשה
+  if (!loadingEvents) loadingEvents = fetchEvents().finally(() => { loadingEvents = null; });
+  return loadingEvents;
+}
+
+async function fetchEvents() {
+  const simulation = $('mode').value === 'simulation';
+  const demo = $('engine').value === 'demo';
+  const requestedCase = caseId;
+  setStatus(demo ? 'Preparing demo data…'
+    : simulation ? 'The agents are arguing the case… a new simulation can take a few minutes'
+      : 'Opening the hearing…', 'live');
   try {
-    const events = $('mode').value === 'simulation'
-      ? (await api.startSimulation(caseId, 3)).events
-      : await api.hearing(caseId);
+    const events = simulation
+      ? (await api.startSimulation(requestedCase, 3, demo)).events
+      : await api.hearing(requestedCase, demo);
+    // בזמן הטעינה החליפו תיק, מצב או מנוע: לא טוענים דיון שכבר לא רלוונטי
+    if (requestedCase !== caseId || simulation !== ($('mode').value === 'simulation')
+      || demo !== ($('engine').value === 'demo')) return false;
     player.load(events);
     eventsLoaded = true;
+    loadedDemo = demo;
+    if (demo) {
+      addNotice('Demo data', simulation
+        ? 'No model was run. The arguments are placeholders, and who answers whom and every score is generated at random. '
+          + 'Only the graph mechanics (attack/support chains, DF-QuAD strengths, the verdict rule) are real.'
+        : 'No model was run. These are the real submissions, but which argument answers which and every score are generated at random. '
+          + 'Only the graph mechanics are real.');
+    }
     return true;
   } catch (e) {
     if (e.notImplemented) {
-      addNotice('Agent simulation', 'The live simulation is not connected yet: the prosecution and defence agents '
-        + 'cannot draft new arguments until TrialSimulation is implemented on the server. '
+      addNotice('Agent simulation', 'The live simulation is not available on this server. '
         + 'Choose "Judgment record" to replay the arguments from the judgment.');
-      setStatus('Simulation not available yet');
+      setStatus('Simulation not available');
     } else {
-      addNotice('Server', e.message);
+      addNotice(simulation ? 'Agent simulation' : 'Server',
+        `${e.message} To see the graph without a model, switch the engine to "Demo data (no model)".`);
       setStatus('Could not open the hearing', '');
     }
     return false;
@@ -215,6 +264,7 @@ function setSide(side) {
 // ---------- wiring ----------
 $('case-select').addEventListener('change', e => selectCase(e.target.value));
 $('mode').addEventListener('change', reset);
+$('engine').addEventListener('change', reset);
 $('btn-play').addEventListener('click', play);
 $('btn-step').addEventListener('click', step);
 $('btn-reset').addEventListener('click', reset);

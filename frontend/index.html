@@ -44,6 +44,10 @@
         <option value="record">Judgment record</option>
         <option value="simulation">Agent simulation</option>
       </select>
+      <select id="engine" class="select" aria-label="Who produces the arguments and scores">
+        <option value="model">Model</option>
+        <option value="demo">Demo data (no model)</option>
+      </select>
       <button class="btn primary" id="btn-play" disabled>Begin hearing</button>
       <button class="btn" id="btn-step" disabled>Next step</button>
       <button class="btn" id="btn-reset" disabled>Reset</button>
@@ -82,15 +86,17 @@
     <section class="pane graph-pane" aria-label="Argument graph">
       <div class="pane-head">
         <h2 class="pane-title">Argument graph</h2>
-        <span class="pane-note">Support edges only · edge weight = strength set by the bench</span>
+        <span class="pane-note" id="graph-note">QBAF · attack and support edges · node value = final strength σ</span>
       </div>
       <div class="graph-wrap" id="graph-wrap">
         <svg id="graph" viewBox="0 0 900 540" role="img" aria-label="Quantitative bipolar argumentation graph"></svg>
       </div>
       <div class="legend">
-        <span><i class="sw sw-pros"></i>Prosecution agent · Applicant → Violation</span>
-        <span><i class="sw sw-def"></i>Defence agent · Government → No violation</span>
-        <span><i class="sw sw-unweighed"></i>Entered, awaiting the bench</span>
+        <span><i class="sw-node" style="border-color:var(--pros)"></i>Applicant (prosecution agent)</span>
+        <span><i class="sw-node" style="border-color:var(--def)"></i>Government (defence agent)</span>
+        <span><i class="sw sw-support"></i>+ supports</span>
+        <span><i class="sw sw-attack"></i>− attacks</span>
+        <span><i class="sw sw-unweighed"></i>Awaiting the bench</span>
       </div>
     </section>
 
@@ -101,12 +107,12 @@
       </div>
       <div class="bench" id="bench">
         <div>
-          <h3 class="block-title">Balance of the case</h3>
+          <h3 class="block-title">Strength of the claim σ(C)</h3>
           <div class="balance">
             <div class="balance-bar"><span class="p" id="bar-p"></span><span class="d" id="bar-d"></span></div>
             <div class="balance-nums">
-              <div><span class="muted">Violation</span><b id="score-p">0.00</b></div>
-              <div class="r"><span class="muted">No violation</span><b id="score-d">0.00</b></div>
+              <div><span class="muted">σ(C)</span><b id="score-p">0.50</b></div>
+              <div class="r"><span class="muted">Threshold τ(C)</span><b id="score-d">0.50</b></div>
             </div>
             <div class="lead" id="lead">No arguments weighed yet.</div>
           </div>
@@ -116,8 +122,8 @@
           <div class="assess" id="assess"></div>
         </div>
         <div>
-          <h3 class="block-title">Margin over the hearing</h3>
-          <svg id="timeline" viewBox="0 0 300 130" role="img" aria-label="Margin between the two decisions after each assessment"></svg>
+          <h3 class="block-title">σ(C) over the hearing</h3>
+          <svg id="timeline" viewBox="0 0 300 130" role="img" aria-label="Strength of the claim after each assessment"></svg>
         </div>
         <div>
           <h3 class="block-title">Tipping points</h3>

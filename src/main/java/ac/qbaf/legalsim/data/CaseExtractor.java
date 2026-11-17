@@ -1,8 +1,8 @@
 package ac.qbaf.legalsim.data;
 
-import ac.qbaf.legalsim.llm.Claude;
+import ac.qbaf.legalsim.llm.Llm;
 
-/** מחלץ מטקסט פסק הדין את העובדות, טענות הצדדים וההכרעה, בעזרת Claude. */
+/** מחלץ מטקסט פסק הדין את העובדות, טענות הצדדים וההכרעה, בעזרת מודל השפה (ראו Llm). */
 public class CaseExtractor {
     private static final String SYSTEM_PROMPT = """
             You extract structured data from judgments of the European Court of Human Rights \
@@ -21,9 +21,9 @@ public class CaseExtractor {
             "violation" or "no_violation".""";
 
     public LegalCase extract(String caseId, String judgmentText) {
-        LegalCase extracted = Claude.structured(SYSTEM_PROMPT,
+        LegalCase extracted = Llm.structured(SYSTEM_PROMPT,
                 "Case id: " + caseId + "\n\n<judgment>\n" + judgmentText + "\n</judgment>",
-                LegalCase.class);
+                LegalCase.class, Llm.PRECISE);
         return validate(caseId, extracted);
     }
 
